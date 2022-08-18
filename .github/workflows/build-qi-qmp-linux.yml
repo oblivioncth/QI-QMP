@@ -19,9 +19,9 @@ env:
   general_download_dir: ${{ github.workspace }}/Download
   qt_install_dir: ${{ github.workspace }}/Qt/Install
   qt_download_dir: ${{ github.workspace }}/Qt/Download
-  qi-qmp_src_suffix: QI-QMP/Source
-  qi-qmp_src_dir: ${{ github.workspace }}/QI-QMP/Source
-  qi-qmp_build_dir: ${{ github.workspace }}/QI-QMP/Build
+  qi_qmp_src_suffix: QI-QMP/Source
+  qi_qmp_src_dir: ${{ github.workspace }}/QI-QMP/Source
+  qi_qmp_build_dir: ${{ github.workspace }}/QI-QMP/Build
 
 jobs:
   build-qi-qmp:
@@ -61,9 +61,9 @@ jobs:
     - name: Set derived variables with shell because GitHub Actions env context sucks
       run: |
         echo "qt_install_dest=${{ env.qt_download_dir }}/${{ env.qt_install_name }}" >> $GITHUB_ENV
-        echo "qi-qmp_package_path=${{ env.qi-qmp_build_dir }}/out/dist" >> $GITHUB_ENV
-        qi-qmp_install_path="${{ env.qi-qmp_build_dir }}/out/install"
-        echo "qi-qmp_install_path=$qi-qmp_install_path" >> $GITHUB_ENV
+        echo "qi_qmp_package_path=${{ env.qi_qmp_build_dir }}/out/dist" >> $GITHUB_ENV
+        qi_qmp_install_path="${{ env.qi_qmp_build_dir }}/out/install"
+        echo "qi_qmp_install_path=$qi_qmp_install_path" >> $GITHUB_ENV
         echo "qt_cmake=$qt_install_dir/bin/qt-cmake" >> $GITHUB_ENV
     - name: Cache Qt Build
       id: cache-qt
@@ -119,15 +119,15 @@ jobs:
     - name: Checkout QI-QMP
       uses: actions/checkout@v3
       with:
-        path: ${{ env.qi-qmp_src_suffix }}
+        path: ${{ env.qi_qmp_src_suffix }}
         fetch-depth: 0 # Required for verbose versioning to work correctly
     - name: Build/Install QI-QMP
-      working-directory: ${{ env.qi-qmp_src_dir }}
+      working-directory: ${{ env.qi_qmp_src_dir }}
       run: |
         echo Configuring CMake...
-        "$qt_cmake" -G "$cmake_gen" -S "$qi-qmp_src_dir" -B "$qi-qmp_build_dir" -D QI_QMP_DOCS_TARGET=ON -D CMAKE_CXX_COMPILER="$cxx_comp" -D CMAKE_C_COMPILER="$c_comp"
+        "$qt_cmake" -G "$cmake_gen" -S "$qi_qmp_src_dir" -B "$qi_qmp_build_dir" -D QI_QMP_DOCS_TARGET=ON -D CMAKE_CXX_COMPILER="$cxx_comp" -D CMAKE_C_COMPILER="$c_comp"
         echo Changing to build directory...
-        cd "$qi-qmp_build_dir"
+        cd "$qi_qmp_build_dir"
         echo Building QI-QMP debug...
         cmake --build . --target all --config Debug
         echo Building QI-QMP release...
@@ -151,5 +151,5 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ steps.get_artifact_name.outputs[env.artifact_output_var] }}
-        path: ${{ env.qi-qmp_install_path }}
+        path: ${{ env.qi_qmp_install_path }}
         if-no-files-found: error

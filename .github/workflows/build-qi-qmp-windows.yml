@@ -18,9 +18,9 @@ on:
 env:
   qt_install_dir: ${{ github.workspace }}/Qt/Install
   qt_download_dir: ${{ github.workspace }}/Qt/Download
-  qi-qmp_src_suffix: QI-QMP/Source
-  qi-qmp_src_dir: ${{ github.workspace }}/QI-QMP/Source
-  qi-qmp_build_dir: ${{ github.workspace }}/QI-QMP/Build
+  qi_qmp_src_suffix: QI-QMP/Source
+  qi_qmp_src_dir: ${{ github.workspace }}/QI-QMP/Source
+  qi_qmp_build_dir: ${{ github.workspace }}/QI-QMP/Build
 
 jobs:
   build-qi-qmp:
@@ -59,9 +59,9 @@ jobs:
     - name: Set derived variables with shell because GitHub Actions env context sucks
       run: |
         echo "qt_install_dest=${{ env.qt_download_dir }}/${{ env.qt_install_name }}" >> $Env:GITHUB_ENV
-        echo "qi-qmp_package_path=${{ env.qi-qmp_build_dir }}/out/dist" >> $Env:GITHUB_ENV
-        $qi-qmp_install_path="${{ env.qi-qmp_build_dir }}/out/install"
-        echo "qi-qmp_install_path=$qi-qmp_install_path" >> $Env:GITHUB_ENV
+        echo "qi_qmp_package_path=${{ env.qi_qmp_build_dir }}/out/dist" >> $Env:GITHUB_ENV
+        $qi_qmp_install_path="${{ env.qi_qmp_build_dir }}/out/install"
+        echo "qi_qmp_install_path=$qi_qmp_install_path" >> $Env:GITHUB_ENV
         echo "qt_cmake=${Env:qt_install_dir}/bin/qt-cmake.bat" >> $Env:GITHUB_ENV
     - name: Cache Qt Build
       id: cache-qt
@@ -88,10 +88,10 @@ jobs:
     - name: Checkout QI-QMP
       uses: actions/checkout@v3
       with:
-        path: ${{ env.qi-qmp_src_suffix }}
+        path: ${{ env.qi_qmp_src_suffix }}
         fetch-depth: 0 # Required for verbose versioning to work correctly
     - name: Build/Install QI-QMP
-      working-directory: ${{ env.qi-qmp_src_dir }}
+      working-directory: ${{ env.qi_qmp_src_dir }}
       shell: cmd
       env:
         doxygen_root: C:\Program Files\doxygen # Required because of #42
@@ -99,9 +99,9 @@ jobs:
         echo "Setup C++ Build Environment..."
         CALL "${{ env.vs_dir }}\Common7\Tools\VsDevCmd.bat" -arch=amd64
         echo "Configure CMake using Qt wrapper..."
-        CALL "${{ env.qt_cmake }}" -G "${{ env.cmake_gen }}" -S "${{ env.qi-qmp_src_dir}}" -B "${{ env.qi-qmp_build_dir }}" -D QI_QMP_DOCS_TARGET=ON -D Doxygen_ROOT="${{ env.doxygen_root }}"
+        CALL "${{ env.qt_cmake }}" -G "${{ env.cmake_gen }}" -S "${{ env.qi_qmp_src_dir}}" -B "${{ env.qi_qmp_build_dir }}" -D QI_QMP_DOCS_TARGET=ON -D Doxygen_ROOT="${{ env.doxygen_root }}"
         echo "Changing to build directory..."
-        cd "%qi-qmp_build_dir%"
+        cd "%qi_qmp_build_dir%"
         echo "Building QI-QMP debug..."
         cmake --build . --target all --config Debug
         echo "Building QI-QMP release..."
@@ -117,10 +117,10 @@ jobs:
         echo "Build complete."
     - name: Get QI-QMP artifact name
       id: get_artifact_name
-      run: echo "::set-output name=${{ env.artifact_output_var }}::$((Get-ChildItem -Path "${{ env.qi-qmp_package_path }}" -Filter *.zip)[0].BaseName)"
+      run: echo "::set-output name=${{ env.artifact_output_var }}::$((Get-ChildItem -Path "${{ env.qi_qmp_package_path }}" -Filter *.zip)[0].BaseName)"
     - name: Upload QI-QMP build artifact
       uses: actions/upload-artifact@v3
       with:
         name: ${{ steps.get_artifact_name.outputs[env.artifact_output_var] }}
-        path: ${{ env.qi-qmp_install_path }}
+        path: ${{ env.qi_qmp_install_path }}
         if-no-files-found: error

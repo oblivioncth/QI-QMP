@@ -9,20 +9,20 @@ jobs:
     name: Ensure higher version than last tag has been set
     runs-on: windows-latest
     env:
-      qi-qmp_src_suffix: QI-QMP/Source/
-      qi-qmp_src_dir: ${{ github.workspace }}/QI-QMP/Source/
+      qi_qmp_src_suffix: QI-QMP/Source/
+      qi_qmp_src_dir: ${{ github.workspace }}/QI-QMP/Source/
     steps:
     - name: Checkout QI-QMP
       uses: actions/checkout@v3
       with:
-        path: ${{ env.qi-qmp_src_suffix }}
+        path: ${{ env.qi_qmp_src_suffix }}
         fetch-depth: 0 # Required for tag search to find previous tag
     - name: Compare versions
       env:
         match_start: set\(QI_QMP_BASE_VERSION
         match_end: \)
       run: |
-        cd "${{ env.qi-qmp_src_dir }}"
+        cd "${{ env.qi_qmp_src_dir }}"
         echo "Checking for version tags..."
         if(git tag -l v*.*){
           echo "Version tags found, comparing new and last tag..."
