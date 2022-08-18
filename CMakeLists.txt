@@ -30,7 +30,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Build augmentation
 set(CMAKE_AUTOMOC ON)
-enable_language("RC")
 
 # Add local modules
 set(PROJ_SCRIPTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
