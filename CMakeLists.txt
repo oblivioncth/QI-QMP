@@ -114,7 +114,7 @@ set(INCLUDE_HEADERS
 )
 
 set(IMPLEMENTATION
-    qmpi.cpp
+    src/qmpi.cpp
 )
 
 # Name here needs to be as unique as possible for when this project is inlcuded
