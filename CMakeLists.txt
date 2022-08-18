@@ -217,7 +217,7 @@ if(QI_QMP_DOCS_TARGET)
     )
 
     # Determine Qt related doc paths
-    include(Qx/QtDocsHelper)
+    include(QI-QMP/QtDocsHelper)
     configure_qt_doc_link(${Qt6_PREFIX_PATH})
 
     # Set Doxygen parameters
