@@ -69,6 +69,7 @@ endif()
 
 # Cmake scripts
 set(FILE_TEMPLATES_PATH "${PROJ_SCRIPTS_PATH}/file_templates")
+set(DOC_SCRIPTS_PATH "${PROJ_SCRIPTS_PATH}/doc")
 
 # Source
 set(DOC_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/doc")
