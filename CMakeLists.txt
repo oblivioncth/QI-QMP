@@ -3,6 +3,13 @@
 # CMake
 cmake_minimum_required(VERSION 3.21.1)
 
+# Store minimum required version for later since it can be overwritten
+# by find_package/macro calls in dependencies (stupid)
+set(TRUE_CMAKE_MINIMUM_REQUIRED ${CMAKE_MINIMUM_REQUIRED_VERSION})
+
+# Configuration options
+option(QI_QMP_DOCS_TARGET "Build Qx documentation" OFF)
+
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
 set(QI_QMP_BASE_VERSION 0.1) # Required for CI/CD
@@ -64,6 +71,12 @@ endif()
 # Cmake scripts
 set(FILE_TEMPLATES_PATH "${PROJ_SCRIPTS_PATH}/file_templates")
 
+# Source
+set(DOC_SOURCE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/doc")
+
+# Build
+set(DOC_BUILD_PATH "${CMAKE_CURRENT_BINARY_DIR}/doc")
+
 # Install
 set(HEADER_INSTALL_SUFFIX "include")
 
@@ -88,7 +101,7 @@ set(QT_FIND_COMPONENTS
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # Find Qt package
-include(Qx/BetterFindQt6)
+include(QI-QMP/BetterFindQt6)
 find_qt6_package(REQUIRED COMPONENTS ${QT_FIND_COMPONENTS})
 
 # Fetch Qx (build and import from source)
@@ -172,6 +185,53 @@ write_basic_package_version_file(
     VERSION ${PROJECT_VERSION}
     COMPATIBILITY SameMinorVersion
 )
+
+#================ Build Documentation ======================
+
+if(QI_QMP_DOCS_TARGET)
+    # Find Doxygen package
+    find_package(Doxygen 1.9.4 REQUIRED
+                 COMPONENTS dot
+    )
+
+    # Configure files
+    configure_file("${FILE_TEMPLATES_PATH}/doc_mainpage.md.in"
+        "${DOC_GENERATED_PATH}/mainpage.md"
+        @ONLY
+    )
+
+    # Doc Input
+    set(DOC_INPUT_LIST
+        "${DOC_GENERATED_PATH}/mainpage.md"
+        "${DOC_SOURCE_PATH}/namespace.dox"
+        "${DOC_SOURCE_PATH}/general"
+        "src"
+        "include"
+    )
+
+    set(DOC_EXAMPLE_LIST
+        "${DOC_SOURCE_PATH}/snippets"
+    )
+
+    set(DOC_IMAGE_LIST
+        "${DOC_SOURCE_PATH}/images"
+    )
+
+    # Determine Qt related doc paths
+    include(Qx/QtDocsHelper)
+    configure_qt_doc_link(${Qt6_PREFIX_PATH})
+
+    # Set Doxygen parameters
+    include(${DOC_SCRIPTS_PATH}/doxyconf.cmake)
+
+    # Add Doxygen target
+    set(DOC_TARGET_NAME "qi_qmp_docs")
+    doxygen_add_docs(${DOC_TARGET_NAME}
+        ${DOC_INPUT_LIST}
+    )
+
+    message(STATUS "Doxygen configured. Build target '${DOC_TARGET_NAME}' to build the documentation.")
+endif()
 
 #================= Install ==========================
 
