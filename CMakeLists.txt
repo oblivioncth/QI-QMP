@@ -204,7 +204,6 @@ if(QI_QMP_DOCS_TARGET)
     # Doc Input
     set(DOC_INPUT_LIST
         "${DOC_GENERATED_PATH}/mainpage.md"
-        "${DOC_SOURCE_PATH}/namespace.dox"
         "src"
         "include"
     )
