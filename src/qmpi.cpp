@@ -1,5 +1,5 @@
 // Unit Include
-#include "qmpi.h"
+#include "qi-qmp/qmpi.h"
 
 // Qx Includes
 #include <qx/core/qx-json.h>
