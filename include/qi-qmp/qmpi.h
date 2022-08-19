@@ -23,6 +23,7 @@ public:
 
 //-Class Variables-----------------------------------------------------------------------------------------------------------
 private:
+    /*! @cond */
     class JsonKeys
     {
     public:
@@ -64,7 +65,7 @@ private:
             static inline const QString ARGUMENTS = "arguments";
         };
     };
-
+    /*! @endcond */
     static inline const QString NEGOTIATION_COMMAND = "qmp_capabilities";
 
 //-Instance Variables--------------------------------------------------------------------------------------------------------
