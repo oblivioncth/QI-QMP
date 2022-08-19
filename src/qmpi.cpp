@@ -9,7 +9,115 @@
 // Qmpi
 //===============================================================================================================
 
+/*!
+ *  @class Qmpi qi-qmp/qmpi.h
+ *
+ *  @brief The Qmpi class is an interface through which to communicate with a QEMU instance via the
+ *  QEMU Machine Protocol
+ *
+ *  The interface works asynchronously, providing updates via signals and requires an event loop to function.
+ *
+ *  All commands issued through the interface may optionally contain a context parameter in the form of @ref
+ *  std::any, which will be provided along with that command's corresponding response when
+ *  responseReceived() or error errorResponseReceived() is emitted.
+ *
+ *  @note Currently only connecting to servers listening for TCP connections is supported (i.e. no local/UNIX
+ *  socket connections).
+ *
+ *  @sa QTcpSocket.
+ */
+
+//-Class Enums-----------------------------------------------------------------------------------------------
+//Public:
+/*!
+ *  @enum Qmpi::State
+ *
+ *  This enum describes the different states in which the interface can be.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::Disconnected
+ *  The interface is not connected to any server and is inactive.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::Connecting
+ *  The interface is attempting to connect to its assigned server.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::AwaitingWelcome
+ *  The interface is waiting to receive the server's greeting.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::Negotiating
+ *  The interface is automatically handling capabilities negotiation.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::Idle
+ *  The interface is connected to a server and is not sending any commands nor expecting any responses.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::Closing
+ *  The interface is handling disconnection from the server.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::ExecutingCommand
+ *  The interface is encoding/ending a command to the server.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::AwaitingMessage
+ *  The interface is waiting for a response from the server.
+ */
+
+/*!
+ *  @var Qmpi::State Qmpi::ReadingMessage
+ *  The interface is parsing a response from the server.
+ */
+
+/*!
+ *  @enum Qmpi::CommunicationError
+ *
+ *  This enum describes the various communication errors that can occur.
+ */
+
+/*!
+ *  @var Qmpi::CommunicationError Qmpi::WriteFailed
+ *  Writing data to the server failed.
+ */
+
+/*!
+ *  @var Qmpi::CommunicationError Qmpi::ReadFailed
+ *  Reading data from the server failed.
+ */
+
+/*!
+ *  @var Qmpi::CommunicationError Qmpi::TransactionTimeout
+ *  The server ran out of time to respond.
+ */
+
+/*!
+ *  @var Qmpi::CommunicationError Qmpi::UnexpectedReceive
+ *  The interface received a response when it was not expecting one.
+ */
+
+/*!
+ *  @var Qmpi::CommunicationError Qmpi::UnexpectedResponse
+ *  The interface received a response that does not follow the known protocol.
+ */
+
 //-Constructor-------------------------------------------------------------
+/*!
+ *  Constructs a QMP interface configured to connect to a QEMU instance at address @a address on port
+ *  @a port.
+ *
+ *  The parent of the object is set to @a parent.
+ */
 Qmpi::Qmpi(QHostAddress address, quint16 port, QObject* parent) :
       QObject(parent),
       mAddress(address),
@@ -291,13 +399,69 @@ bool Qmpi::processEventMessage(const QJsonObject& event)
 }
 
 //Public:
+/*!
+ *  Returns the IP address the interface is configured to connect to.
+ *
+ *  @sa port().
+ */
 QHostAddress Qmpi::address() const { return mAddress; }
+
+/*!
+ *  Returns the port the interface is configured to connect through.
+ *
+ *  @sa address().
+ */
 quint16 Qmpi::port() const { return mPort; }
+
+/*!
+ *  Returns the state of the interface.
+ */
 Qmpi::State Qmpi::state() const { return mState; }
 
-void Qmpi::setTimeout(int timeout) { mTransactionTimer.setInterval(timeout); }
-int Qmpi::timeout() const { return mTransactionTimer.interval(); }
+/*!
+ *  Sets the transaction timeout of the interface to @a timeout.
+ *
+ *  The transaction timeout is how long the connected QEMU instance has to reply with a
+ *  complete message after sending a command before the connection is automatically closed.
+ *
+ *  The received message does not have to be a response to that particular command; any
+ *  received message will reset the timeout, while sending additional commands will not.
+ *
+ *  If a transaction timeout occurs communicationErrorOccured() will be emitted with the
+ *  value @ref TransactionTimeout. If all sent commands have been processed and the
+ *  interface is not currently expecting any responses the timeout will not be in effect.
+ *
+ *  Setting this value to @c -1 will disable the timeout.
+ *
+ *  @sa transactionTimeout().
+ */
+void Qmpi::setTransactionTimeout(int timeout) { mTransactionTimer.setInterval(timeout); }
 
+/*!
+ *  Returns the transaction timeout of the interface.
+ *
+ *  The default is 30,000 milliseconds.
+ *
+ *  @sa setTransactionTimeout().
+ */
+int Qmpi::transactionTimeout() const { return mTransactionTimer.interval(); }
+
+/*!
+ *  Attempts to make a connection to the QEMU instance specified by IP address and port
+ *  during the interface's construction.
+ *
+ *  The interface's state immediately changes to @ref Connecting, followed by
+ *  @ref AwaitingWelcome if the underlying socket successfully establishes a connection.
+ *  Once the interface has received the server's welcome message connected() is emitted
+ *  and Qmpi enters the @ref Negotiating state. At this point capabilities negotiation is
+ *  handled automatically since only the base protocol capabilities are currently supported,
+ *  upon which readyForCommands() is emitted and the interface enters the @ref Idle state.
+ *
+ *  At any point, the interface can emit connectionErrorOccurred() or communicationErrorOccurred()
+ *  signal an error occurred.
+ *
+ *  @sa state(), and disconnectFromHost().
+ */
 void Qmpi::connectToHost()
 {
     // Bail if already working
@@ -309,6 +473,13 @@ void Qmpi::connectToHost()
     mSocket.connectToHost(mAddress, mPort);
 }
 
+/*!
+ *  Initiates closure of the interfaces connection and enters the @ref Closing state. If there is
+ *  pending data waiting to be written, Qmpi waits until all data has been written before the connection
+ *  is closed. Eventually, it will enter the @ref Disconnected state and emit the disconnected() signal.
+ *
+ *  @sa connectToHost().
+ */
 void Qmpi::disconnectFromHost()
 {
     // Bail if already disconnected
@@ -316,13 +487,54 @@ void Qmpi::disconnectFromHost()
         return;
 
     // Disconnect
+    changeState(State::Closing);
     mSocket.disconnectFromHost();
 }
 
+/*!
+ *  Returns @c true if the interfaces connection is active is any way. That is, the interface is in any
+ *  state other than @ref Disconnected; otherwise, returns @c false.
+ *
+ *  @sa isConnected().
+ */
 bool Qmpi::isConnectionActive() const { return mState != State::Disconnected; }
 
+/*!
+ *  Returns @c true if the interfaces has fully connected to the QEMU instance, meaning the underlying
+ *  socket successfully established a connection and the server's greeting was received.
+ *
+ *  @sa isConnectionActive().
+ */
+bool Qmpi::isConnected() const
+{
+    static QSet<State> notFullyConnectedStates = {
+        Disconnected,
+        Connecting,
+        AwaitingWelcome
+    };
+
+    return !notFullyConnectedStates.contains(mState);
+}
+
+/*!
+ *  Executes the provided command on the connected QEMU instance.
+ *
+ *  @param command The name of the command to execute.
+ *  @param args The command's arguments, if any.
+ *  @param context An optional object that will be provided with server's response to the command.
+ *
+ *  The server responds to commands in the same order they are sent.
+ *
+ *  The @a context parameter is useful for identifying which command a response is directed towards
+ *  or associating the response to a command with specific data or actions (i.e. a callback function).
+ *
+ *  @note readyForCommands() must have been emitted before commands can be sent.
+ */
 void Qmpi::execute(QString command, QJsonObject args, std::any context)
 {
+    if(!isConnected() || mState == State::Negotiating)
+        return;
+
     changeState(State::ExecutingCommand);
 
     // Add context to queue
@@ -387,3 +599,117 @@ void Qmpi::handleReceivedData()
 }
 
 void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationError::TransactionTimeout); }
+
+//-Signals------------------------------------------------------------------------------------------------
+/*!
+ *  @fn void Qmpi::connected(QJsonObject version, QJsonArray capabilities)
+ *
+ *  This signal is emitted once the interface has finished connecting to the QEMU instance and performing
+ *  capabilities negotiation.
+ *
+ *  @a version contains the server's version information, while @a capabilities describes the server's
+ *  QMP capabilities.
+ *
+ *  @sa disconnected(), readyForCommands().
+ */
+
+/*!
+ *  @fn void Qmpi::readyForCommands()
+ *
+ *  This signal is emitted once capabilities negotiation has been completed and the server is ready to
+ *  received commands.
+ *
+ *  @sa connected().
+ */
+
+/*!
+ *  @fn void Qmpi::disconnected()
+ *
+ *  This signal is emitted when the interface has fully disconnected from the QEMU instance.
+ *
+ *  @note This signal will only be emitted if the interface managed to fully connect to the server.
+ *
+ *  @warning If you need to delete the sender() of this signal in a slot connected to it, use the
+ *  deleteLater() function.
+ *
+ *  @sa connected(), finished(), isConnectionActive().
+ */
+
+/*!
+ *  @fn void Qmpi::finished()
+ *
+ *  This signal is emitted when the interface returns to the @ref Disconnected state for any reason,
+ *  regardless of whether or a complete connection to the server was ever achieved.
+ *
+ *  @sa disconnected(), stateChanged().
+ */
+
+/*!
+ *  @fn void Qmpi::responseReceived(QJsonValue value, std::any context)
+ *
+ *  This signal is emitted when the a successful (i.e. `return`) response is received from the server
+ *  after executing a command.
+ *
+ *  @a value contains the return value of the command, which may be an empty QJsonObject if the command
+ *  does not return data, while @a context contains the context object provided when the command was
+ *  executed, if it was set.
+ *
+ *  @sa errorResponseReceived().
+ */
+
+/*!
+ *  @fn void Qmpi::eventReceived(QString name, QJsonObject data, QDateTime timestamp)
+ *
+ *  This signal is emitted when an asynchronous event is posted by the server.
+ *
+ *  The signal parameters provide the @a name of the event, the event's @a data and its @a timestamp.
+ *
+ *  @note QEMU instances record the time of events with microsecond precision, while QDateTime is only
+ *  capable of millisecond precision; therefore, the timestamp of all events are rounded to the
+ *  nearest millisecond.
+ *
+ *  @sa responseReceived().
+ */
+
+/*!
+ *  @fn void Qmpi::connectionErrorOccured(QAbstractSocket::SocketError error)
+ *
+ *  This signal is emitted when the underlying socket experiences a connection error, with @a error
+ *  containing the type of error.
+ *
+ *  When such and error occurs the connection is immediately aborted, all pending reads/writes are discarded,
+ *  and the interface enters the @ref Disconnected state.
+ */
+
+/*!
+ *  @fn void Qmpi::communicationErrorOccured(Qmpi::CommunicationError error)
+ *
+ *  This signal is emitted when IO with the server fails, the known QMP protocol is violated during communication,
+ *  or the server otherwise behaves unexpectedly. @a error contains the type of communication error.
+ *
+ *  When such and error occurs the connection is immediately aborted, all pending reads/writes are discarded,
+ *  and the interface enters the @ref Disconnected state.
+ */
+
+/*!
+ *  @fn void Qmpi::errorResponseReceived(QString errorClass, QString description, std::any context)
+ *
+ *  This signal is emitted when the an error response is received from the server after executing
+ *  a command.
+ *
+ *  @a errorClass contains the type of error and @a description contains a human readable
+ *  summary of the error, while @a context contains the context object provided when the
+ *  command was executed, if it was set.
+ *
+ *  @sa responseReceived().
+ */
+
+/*!
+ *  @fn void Qmpi::stateChanged(Qmpi::State state)
+ *
+ *  This signal is emitted when the interface's state changes, with @a state containing the new state.
+ *
+ *  @sa connected(), disconnected(), readyForCommands() and finished().
+ */
+
+

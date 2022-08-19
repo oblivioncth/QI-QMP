@@ -18,7 +18,7 @@ class Qmpi : public QObject
     Q_OBJECT
 //-Class Enums--------------------------------------------------------------------------------------------------------------
 public:
-    enum State { Disconnected, Connecting, AwaitingWelcome, Negotiating, Idle, ExecutingCommand, AwaitingMessage, ReadingMessage };
+    enum State { Disconnected, Connecting, AwaitingWelcome, Negotiating, Idle, Closing, ExecutingCommand, AwaitingMessage, ReadingMessage };
     enum CommunicationError { WriteFailed, ReadFailed, TransactionTimeout, UnexpectedReceive, UnexpectedResponse };
 
 //-Class Variables-----------------------------------------------------------------------------------------------------------
@@ -114,13 +114,14 @@ public:
     State state() const;
 
     // Properties
-    void setTimeout(int timeout = 30000);
-    int timeout() const;
+    void setTransactionTimeout(int timeout = 30000);
+    int transactionTimeout() const;
 
     // Connection
     void connectToHost();
     void disconnectFromHost();
     bool isConnectionActive() const;
+    bool isConnected() const;
 
     // Commands
     void execute(QString command, QJsonObject args = QJsonObject(), std::any context = std::any());
