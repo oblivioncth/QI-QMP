@@ -518,7 +518,7 @@ void Qmpi::connectToHost()
     else if(std::holds_alternative<QString>(mHostId))
         mSocket.connectToHost(std::get<QString>(mHostId), mPort);
     else
-        throw(Q_FUNC_INFO " unhandled host id variant");
+        throw std::runtime_error(std::string(Q_FUNC_INFO) + " unhandled host id variant");
 }
 
 /*!
