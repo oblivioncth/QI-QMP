@@ -7,6 +7,8 @@ This project makes use of the CMake build system generator for both compilation 
 
 It is based on Qt 6.
 
+[![Dev Builds](https://github.com/oblivioncth/QI-QMP/actions/workflows/push-reaction.yml/badge.svg?branch=dev)](https://github.com/oblivioncth/QI-QMP/actions/workflows/push-reaction.yml)
+
 ## Documentation:
 Detailed documentation of this library, facilitated by Doxygen, is available at: https://oblivioncth.github.io/QI-QMP/
 
@@ -15,7 +17,7 @@ Either grab the latest [release](https://github.com/oblivioncth/QI-QMP/releases/
 
 Building from source is recommended as this library can easily be integrated as a dependency into your project using CMake's FetchContent. An example of this is demonstrated in the documentation.
 
-Either way the [Minimal Example](https://oblivioncth.github.io/QI-QMP/index.html#autotoc_md3), gives a basic overview of how to use the interface.
+Finally, the [Minimal Example](https://oblivioncth.github.io/QI-QMP/index.html#autotoc_md3), gives a basic overview of how to use the interface.
 
 ## Pre-built Releases/Artifacts
 
