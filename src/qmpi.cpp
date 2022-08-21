@@ -689,6 +689,9 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *  This signal is emitted when the interface returns to the @ref Disconnected state for any reason,
  *  regardless of whether or a complete connection to the server was ever achieved.
  *
+ *  @warning If you need to delete the sender() of this signal in a slot connected to it, use the
+ *  deleteLater() function.
+ *
  *  @sa disconnected(), stateChanged().
  */
 
@@ -725,7 +728,7 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *  This signal is emitted when the underlying socket experiences a connection error, with @a error
  *  containing the type of error.
  *
- *  When such and error occurs the connection is immediately aborted, all pending reads/writes are discarded,
+ *  @note When such and error occurs the connection is immediately aborted, all pending reads/writes are discarded,
  *  and the interface enters the @ref Disconnected state.
  */
 
@@ -735,7 +738,7 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *  This signal is emitted when IO with the server fails, the known QMP protocol is violated during communication,
  *  or the server otherwise behaves unexpectedly. @a error contains the type of communication error.
  *
- *  When such and error occurs the connection is immediately aborted, all pending reads/writes are discarded,
+ *  @note When such and error occurs the connection is immediately aborted, all pending reads/writes are discarded,
  *  and the interface enters the @ref Disconnected state.
  */
 
