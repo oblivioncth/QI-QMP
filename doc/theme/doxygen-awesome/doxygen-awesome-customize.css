@@ -1,16 +1,16 @@
 html {
 	--side-nav-fixed-width: 340px;
-    --primary-color: #CC2828;
-    --primary-dark-color: #7C3633;
-    --primary-light-color: #E57670;
+    --primary-color: #CC6428;
+    --primary-dark-color: #7A4E33;
+    --primary-light-color: #E29F6F;
 }
 
 html.dark-mode {
     color-scheme: dark;
 
-    --primary-color: #E22D2D;
-    --primary-dark-color: #DD5854;
-    --primary-light-color: #A84946;
+    --primary-color: #E06B2C;
+    --primary-dark-color: #DB8855;
+    --primary-light-color: #A56A45;
 }
 
 .github-corner svg {

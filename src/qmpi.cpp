@@ -17,7 +17,7 @@
  *
  *  The interface works asynchronously, providing updates via signals and requires an event loop to function.
  *
- *  All commands issued through the interface may optionally contain a context parameter in the form of @ref
+ *  All commands issued through the interface may optionally contain a context parameter in the form of
  *  std::any, which will be provided along with that command's corresponding response when
  *  responseReceived() or error errorResponseReceived() is emitted.
  *
@@ -711,5 +711,3 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *
  *  @sa connected(), disconnected(), readyForCommands() and finished().
  */
-
-
