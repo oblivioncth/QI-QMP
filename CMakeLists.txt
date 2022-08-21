@@ -136,10 +136,10 @@ target_sources(${TARGET_NAME}
 )
 
 # Add headers to target
- target_include_directories(${TARGET_NAME} PUBLIC
-     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-     $<INSTALL_INTERFACE:include/${PROJECT_NAME_LC}>
- )
+target_include_directories(${TARGET_NAME} PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include/${PROJECT_NAME_LC}>
+)
 
 # Build pathed include file list
 foreach(api_header ${INCLUDE_HEADERS})
@@ -249,7 +249,7 @@ install(TARGETS ${TARGET_NAME}
 # Install public headers
 install(DIRECTORY include/${PROJECT_NAME_LC}
     COMPONENT ${TARGET_NAME}
-    DESTINATION "include/${PROJECT_NAME_LC}"
+    DESTINATION "include"
     ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
 )
 
