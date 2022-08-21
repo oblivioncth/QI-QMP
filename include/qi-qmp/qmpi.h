@@ -71,7 +71,7 @@ private:
 //-Instance Variables--------------------------------------------------------------------------------------------------------
 private:
     // Network
-    QHostAddress mAddress;
+    std::variant<QHostAddress, QString> mHostId; static_assert(std::variant_size_v<decltype(mHostId)> == 2);
     quint16 mPort;
     QTcpSocket mSocket;
 
@@ -83,11 +83,18 @@ private:
     QTimer mTransactionTimer;
 
 //-Constructor------------------------------------------------------------------------------------------------------------
+private:
+    explicit Qmpi(quint16 port, QObject* parent);
+
 public:
-    explicit Qmpi(QHostAddress address, quint16 port, QObject* parent = nullptr);
+    explicit Qmpi(const QHostAddress& address, quint16 port, QObject* parent = nullptr);
+    explicit Qmpi(const QString& hostname, quint16 port, QObject* parent = nullptr);
 
 //-Instance Functions------------------------------------------------------------------------------------------------------
 private:
+    // Init
+    void commonInit();
+
     // Management
     void changeState(State newState);
     void startTransactionTimer();
@@ -111,6 +118,7 @@ private:
 public:
     // Info
     QHostAddress address() const;
+    QString hostname() const;
     quint16 port() const;
     State state() const;
 

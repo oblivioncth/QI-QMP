@@ -112,17 +112,11 @@
  */
 
 //-Constructor-------------------------------------------------------------
-/*!
- *  Constructs a QMP interface configured to connect to a QEMU instance at address @a address on port
- *  @a port.
- *
- *  The parent of the object is set to @a parent.
- */
-Qmpi::Qmpi(QHostAddress address, quint16 port, QObject* parent) :
-      QObject(parent),
-      mAddress(address),
-      mPort(port),
-      mState(Disconnected)
+//Private:
+Qmpi::Qmpi(quint16 port, QObject* parent) :
+    QObject(parent),
+    mPort(port),
+    mState(Disconnected)
 {
     // Other init
     mTransactionTimer.setSingleShot(true);
@@ -137,9 +131,40 @@ Qmpi::Qmpi(QHostAddress address, quint16 port, QObject* parent) :
     connect(&mSocket, &QTcpSocket::errorOccurred, this, &Qmpi::connectionErrorOccured);
     connect(&mSocket, &QTcpSocket::disconnected, this, &Qmpi::disconnected);
 }
+//Public:
+/*!
+ *  Constructs a QMP interface configured to connect to a QEMU instance at address @a address on port
+ *  @a port. @a port is specified in native byte order.
+ *
+ *  The parent of the object is set to @a parent.
+ */
+Qmpi::Qmpi(const QHostAddress& address, quint16 port, QObject* parent) :
+      Qmpi(port, parent)
+{
+    mHostId = address;
+}
+
+/*!
+ *  Constructs a QMP interface configured to connect to a QEMU instance at hostname @a hostname on port
+ *  @a port. @a hostname may be an IP address in string form (e.g., "192.168.1.1", or
+ *  "7e72:692b:9797:8310:8e68:3a98:3a21:473c"), or it may be a host name (e.g., "example.com"). The
+ *  interface will do a lookup only if required. @a port is specified in native byte order.
+ *
+ *  The parent of the object is set to @a parent.
+ */
+Qmpi::Qmpi(const QString& hostname, quint16 port, QObject* parent) :
+    Qmpi(port, parent)
+{
+    mHostId = hostname;
+}
 
 //-Instance Functions------------------------------------------------------------------------------------------------------
 //Private:
+void Qmpi::commonInit()
+{
+
+}
+
 void Qmpi::changeState(State newState)
 {
     mState = newState;
@@ -400,11 +425,28 @@ bool Qmpi::processEventMessage(const QJsonObject& event)
 
 //Public:
 /*!
- *  Returns the IP address the interface is configured to connect to.
+ *  Returns the IP address the interface is configured to connect to if it was constructed using a
+ *  QHostAddress; otherwise, returns QHostAddress::Null.
  *
  *  @sa port().
  */
-QHostAddress Qmpi::address() const { return mAddress; }
+QHostAddress Qmpi::address() const
+{
+    const QHostAddress* ha = std::get_if<QHostAddress>(&mHostId);
+    return ha ? *ha : QHostAddress::Null;
+}
+
+/*!
+ *  Returns the hostname the interface is configured to connect to if it was constructed using a
+ *  hostname; otherwise, returns a null string.
+ *
+ *  @sa port().
+ */
+QString Qmpi::hostname() const
+{
+    const QString* hn = std::get_if<QString>(&mHostId);
+    return hn ? *hn : QString();
+}
 
 /*!
  *  Returns the port the interface is configured to connect through.
@@ -470,7 +512,13 @@ void Qmpi::connectToHost()
 
     // Connect
     changeState(State::Connecting);
-    mSocket.connectToHost(mAddress, mPort);
+
+    if(std::holds_alternative<QHostAddress>(mHostId))
+        mSocket.connectToHost(std::get<QHostAddress>(mHostId), mPort);
+    else if(std::holds_alternative<QString>(mHostId))
+        mSocket.connectToHost(std::get<QString>(mHostId), mPort);
+    else
+        throw(Q_FUNC_INFO " unhandled host id variant");
 }
 
 /*!
