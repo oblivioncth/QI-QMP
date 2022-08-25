@@ -90,11 +90,12 @@ public:
     explicit Qmpi(const QHostAddress& address, quint16 port, QObject* parent = nullptr);
     explicit Qmpi(const QString& hostname, quint16 port, QObject* parent = nullptr);
 
+//-Destructor-------------------------------------------------------------
+public:
+    ~Qmpi();
+
 //-Instance Functions------------------------------------------------------------------------------------------------------
 private:
-    // Init
-    void commonInit();
-
     // Management
     void changeState(State newState);
     void startTransactionTimer();

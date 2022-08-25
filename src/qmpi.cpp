@@ -158,13 +158,15 @@ Qmpi::Qmpi(const QString& hostname, quint16 port, QObject* parent) :
     mHostId = hostname;
 }
 
-//-Instance Functions------------------------------------------------------------------------------------------------------
+//-Destructor-------------------------------------------------------------
+//Public:
+/*!
+ *  Destroys the interface, closing the underlying connection immediately if necessary.
+ */
+Qmpi::~Qmpi() {}
+
+//-Instance Functions---------------------------------------------------------------
 //Private:
-void Qmpi::commonInit()
-{
-
-}
-
 void Qmpi::changeState(State newState)
 {
     mState = newState;
