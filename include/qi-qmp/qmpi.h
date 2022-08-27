@@ -41,7 +41,7 @@ private:
         {
         public:
             static inline const QString CLASS = "class";
-            static inline const QString DESCRIPTION = "description";
+            static inline const QString DESCRIPTION = "desc";
         };
 
         static inline const QString EVENT = "event";
