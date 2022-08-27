@@ -228,8 +228,6 @@ void Qmpi::negotiateCapabilities()
 
 bool Qmpi::sendCommand(QString command, QJsonObject args)
 {
-    changeState(State::SendingCommand);
-
     // Build JSON object
     QJsonObject commandObject;
     commandObject[JsonKeys::EXECUTE] = command;
@@ -267,11 +265,11 @@ void Qmpi::propagate()
     if(!mExecutionQueue.empty())
     {
         // Send next command
+        changeState(State::SendingCommand);
         ExecutionTask& task = mExecutionQueue.front();
-
         sendCommand(task.command, task.args);
 
-        // Set new state
+        // Set wait state
         changeState(State::AwaitingMessage);
 
         // Start timeout timer
