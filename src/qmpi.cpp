@@ -524,11 +524,11 @@ void Qmpi::connectToHost()
 }
 
 /*!
- *  Initiates closure of the interfaces connection and enters the @ref Closing state. If there is
+ *  Initiates closure of the interface's connection and enters the @ref Closing state. If there is
  *  pending data waiting to be written, Qmpi waits until all data has been written before the connection
  *  is closed. Eventually, it will enter the @ref Disconnected state and emit the disconnected() signal.
  *
- *  @sa connectToHost().
+ *  @sa connectToHost(), and abort().
  */
 void Qmpi::disconnectFromHost()
 {
@@ -539,6 +539,21 @@ void Qmpi::disconnectFromHost()
     // Disconnect
     changeState(State::Closing);
     mSocket.disconnectFromHost();
+}
+
+/*!
+ *  Immediately closes the interface's connection, discarding any pending data.
+ */
+void Qmpi::abort()
+{
+    // Bail if already disconnected
+    if(!isConnectionActive())
+        return;
+
+    // Force disconnect
+    // Shouldn't change state manually as it should go to Disconnected almost instantly,
+    // and this way a emission of stateChanged() is avoided.
+    mSocket.abort();
 }
 
 /*!

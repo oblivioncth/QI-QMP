@@ -130,6 +130,7 @@ public:
     // Connection
     void connectToHost();
     void disconnectFromHost();
+    void abort();
     bool isConnectionActive() const;
     bool isConnected() const;
 
