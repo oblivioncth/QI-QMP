@@ -201,7 +201,7 @@ void Qmpi::reset()
 void Qmpi::raiseCommunicationError(CommunicationError error)
 {
     emit communicationErrorOccured(error);
-    abort();
+    mSocket.abort();
 }
 
 void Qmpi::negotiateCapabilities()
