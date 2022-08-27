@@ -19,6 +19,15 @@ Building from source is recommended as this library can easily be integrated as 
 
 Finally, the [Minimal Example](https://oblivioncth.github.io/QI-QMP/index.html#autotoc_md3), gives a basic overview of how to use the interface.
 
+### Summary
+
+ - C++20
+ - CMake 3.21.1
+
+### Dependencies
+- Qt6
+- [Qx](https://github.com/oblivioncth/Qx/)
+
 ## Pre-built Releases/Artifacts
 
 Releases and some workflows currently provide builds of Qx in the following configurations:
