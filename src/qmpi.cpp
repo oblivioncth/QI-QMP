@@ -66,7 +66,7 @@
  */
 
 /*!
- *  @var Qmpi::State Qmpi::ExecutingCommand
+ *  @var Qmpi::State Qmpi::SendingCommand
  *  The interface is encoding/ending a command to the server.
  */
 
@@ -169,11 +169,14 @@ Qmpi::~Qmpi() {}
 //Private:
 void Qmpi::changeState(State newState)
 {
-    mState = newState;
-    emit stateChanged(mState);
+    if(newState != mState)
+    {
+        mState = newState;
+        emit stateChanged(mState);
+    }
 }
 
-void Qmpi::startTransactionTimer()
+bool Qmpi::startTransactionTimer()
 {
     /* Treat negative values as disabling the timeout. This must be done explicitly as starting
      * a QTimer with a negative interval causes a warning to be logged stating the interval
@@ -182,19 +185,30 @@ void Qmpi::startTransactionTimer()
      * Also don't restart the timer if it's already running
      */
     if(mTransactionTimer.interval() >= 0 && !mTransactionTimer.isActive())
+    {
         mTransactionTimer.start();
+        return true;
+    }
+    else
+        return false;
 
 }
-void Qmpi::stopTransactionTimer()
+bool Qmpi::stopTransactionTimer()
 {
     // Used to enforce symmetry for both starting and stopping the timer (i.e. not interacting with it directly)
     if(mTransactionTimer.isActive())
+    {
         mTransactionTimer.stop();
+        return true;
+    }
+    else
+        return false;
+
 }
 
 void Qmpi::reset()
 {
-    mResponseAwaitQueue = {};
+    mExecutionQueue = {};
     stopTransactionTimer();
 }
 
@@ -214,6 +228,8 @@ void Qmpi::negotiateCapabilities()
 
 bool Qmpi::sendCommand(QString command, QJsonObject args)
 {
+    changeState(State::SendingCommand);
+
     // Build JSON object
     QJsonObject commandObject;
     commandObject[JsonKeys::EXECUTE] = command;
@@ -245,10 +261,30 @@ bool Qmpi::sendCommand(QString command, QJsonObject args)
     return true;
 }
 
+void Qmpi::propagate()
+{
+    // Drive Transactions
+    if(!mExecutionQueue.empty())
+    {
+        // Send next command
+        ExecutionTask& task = mExecutionQueue.front();
+
+        sendCommand(task.command, task.args);
+
+        // Set new state
+        changeState(State::AwaitingMessage);
+
+        // Start timeout timer
+        startTransactionTimer();
+    }
+    else
+        changeState(State::Idle);
+}
+
 void Qmpi::processServerMessage(const QJsonObject& msg)
 {
     // Stop transaction timer since message has arrived
-    stopTransactionTimer();
+    bool timerWasRunning = stopTransactionTimer();
 
     if(mState == State::AwaitingWelcome)
     {
@@ -287,11 +323,16 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
         {
             if(!processEventMessage(msg))
                 return;
+
+            // Restart the transaction timer if it was running since events are just informative
+            // and don't control flow
+            if(timerWasRunning)
+                startTransactionTimer();
         }
         else
         {
             // Error if not expecting a response
-            if(mResponseAwaitQueue.empty())
+            if(mExecutionQueue.empty())
             {
                 raiseCommunicationError(CommunicationError::UnexpectedReceive);
                 return;
@@ -302,6 +343,9 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
             {
                 if(!processReturnMessage(msg))
                     return;
+
+                // Send next command
+                propagate();
             }
             else if(msg.contains(JsonKeys::ERROR))
             {
@@ -315,6 +359,9 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
 
                 if(!processErrorMessage(error))
                     return;
+
+                // Send next command
+                propagate();
             }
             else
             {
@@ -322,12 +369,6 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
                 return;
             }
         }
-
-        // Handle state/timer based on queue
-        bool willIdle = mResponseAwaitQueue.empty();
-        changeState(willIdle ? State::Idle : State::AwaitingMessage);
-        if(!willIdle)
-            startTransactionTimer();
     }
 }
 
@@ -352,11 +393,11 @@ bool Qmpi::processGreetingMessage(const QJsonObject& greeting)
 
 bool Qmpi::processReturnMessage(const QJsonObject& ret)
 {
-    Q_ASSERT(!mResponseAwaitQueue.empty());
+    Q_ASSERT(!mExecutionQueue.empty());
 
     QJsonValue value = ret[JsonKeys::RETURN];
-    std::any context = mResponseAwaitQueue.front();
-    mResponseAwaitQueue.pop();
+    std::any context = mExecutionQueue.front().context;
+    mExecutionQueue.pop();
     emit responseReceived(value, context);
 
     return true; // Can't fail as of yet
@@ -364,10 +405,10 @@ bool Qmpi::processReturnMessage(const QJsonObject& ret)
 
 bool Qmpi::processErrorMessage(const QJsonObject& error)
 {
-    Q_ASSERT(!mResponseAwaitQueue.empty());
+    Q_ASSERT(!mExecutionQueue.empty());
 
-    std::any context = mResponseAwaitQueue.front();
-    mResponseAwaitQueue.pop();
+    std::any context = mExecutionQueue.front().context;
+    mExecutionQueue.pop();
 
     QString errorClass;
     QString description;
@@ -589,7 +630,10 @@ bool Qmpi::isConnected() const
  *  @param args The command's arguments, if any.
  *  @param context An optional object that will be provided with server's response to the command.
  *
- *  The server responds to commands in the same order they are sent.
+ *  The command is placed into an internal queue to be sent when it reaches the front. Only one command
+ *  is sent at a time, with the interface waiting for a response before sending the next.
+ *
+ *  The server responds to commands in the same order they are received.
  *
  *  The @a context parameter is useful for identifying which command a response is directed towards
  *  or associating the response to a command with specific data or actions (i.e. a callback function).
@@ -601,19 +645,16 @@ void Qmpi::execute(QString command, QJsonObject args, std::any context)
     if(!isConnected() || mState == State::Negotiating)
         return;
 
-    changeState(State::ExecutingCommand);
+    // Add command to queue
+    mExecutionQueue.push({
+        .command = command,
+        .args = args,
+        .context = context
+    });
 
-    // Add context to queue
-    mResponseAwaitQueue.push(context);
-
-    // Send command
-    sendCommand(command, args);
-
-    // Start timeout timer
-    startTransactionTimer();
-
-    // Set new state
-    changeState(State::AwaitingMessage);
+    // Ensure commands are being processed
+    if(mState == Idle)
+        propagate();
 }
 
 //-Signals & Slots------------------------------------------------------------------------------------------------------------
@@ -622,7 +663,7 @@ void Qmpi::handleSocketStateChange(QAbstractSocket::SocketState socketState)
 {
     /* Provides finer awareness of socket state
      * i.e. disconnected isn't emitted if connection fails so if only using that signal cleanup may also
-     * need to be prompted from the slot connected to errorOccured by explicitly checking for a failed connection
+     * need to be prompted from the slot connected to errorOccurred by explicitly checking for a failed connection
      * there. But this way we can just check for a change back to the Unconnected state.
      */
     switch(socketState)

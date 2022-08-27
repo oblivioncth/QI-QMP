@@ -18,8 +18,17 @@ class Qmpi : public QObject
     Q_OBJECT
 //-Class Enums--------------------------------------------------------------------------------------------------------------
 public:
-    enum State { Disconnected, Connecting, AwaitingWelcome, Negotiating, Idle, Closing, ExecutingCommand, AwaitingMessage, ReadingMessage };
+    enum State { Disconnected, Connecting, AwaitingWelcome, Negotiating, Idle, Closing, SendingCommand, AwaitingMessage, ReadingMessage };
     enum CommunicationError { WriteFailed, ReadFailed, TransactionTimeout, UnexpectedReceive, UnexpectedResponse };
+
+//-Class Structs------------------------------------------------------------------------------------------------------------
+private:
+    struct ExecutionTask
+    {
+        QString command;
+        QJsonObject args;
+        std::any context;
+    };
 
 //-Class Variables-----------------------------------------------------------------------------------------------------------
 private:
@@ -77,7 +86,7 @@ private:
 
     // Workables
     State mState;
-    std::queue<std::any> mResponseAwaitQueue;
+    std::queue<ExecutionTask> mExecutionQueue;
 
     // Timeout
     QTimer mTransactionTimer;
@@ -98,8 +107,8 @@ public:
 private:
     // Management
     void changeState(State newState);
-    void startTransactionTimer();
-    void stopTransactionTimer();
+    bool startTransactionTimer();
+    bool stopTransactionTimer();
     void reset();
     void raiseCommunicationError(CommunicationError error);
 
@@ -108,6 +117,7 @@ private:
 
     // Commands
     bool sendCommand(QString command, QJsonObject args = QJsonObject());
+    void propagate();
 
     // Message Processing
     void processServerMessage(const QJsonObject& msg);
