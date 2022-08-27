@@ -355,9 +355,10 @@ bool Qmpi::processReturnMessage(const QJsonObject& ret)
     Q_ASSERT(!mResponseAwaitQueue.empty());
 
     QJsonValue value = ret[JsonKeys::RETURN];
-    std::any& context = mResponseAwaitQueue.front();
-    emit responseReceived(value, context);
+    std::any context = mResponseAwaitQueue.front();
     mResponseAwaitQueue.pop();
+    emit responseReceived(value, context);
+
     return true; // Can't fail as of yet
 }
 
@@ -365,7 +366,8 @@ bool Qmpi::processErrorMessage(const QJsonObject& error)
 {
     Q_ASSERT(!mResponseAwaitQueue.empty());
 
-    std::any& context = mResponseAwaitQueue.front();
+    std::any context = mResponseAwaitQueue.front();
+    mResponseAwaitQueue.pop();
 
     QString errorClass;
     QString description;
@@ -381,7 +383,6 @@ bool Qmpi::processErrorMessage(const QJsonObject& error)
     }
 
     emit errorResponseReceived(errorClass, description, context);
-    mResponseAwaitQueue.pop();
     return true;
 }
 
