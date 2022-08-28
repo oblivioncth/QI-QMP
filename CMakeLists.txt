@@ -12,7 +12,7 @@ option(QI_QMP_DOCS_TARGET "Build Qx documentation" OFF)
 
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
-set(QI_QMP_BASE_VERSION 0.1) # Required for CI/CD
+set(QI_QMP_BASE_VERSION 0.1.1) # Required for CI/CD
 project(QI-QMP
     VERSION ${QI_QMP_BASE_VERSION}
     LANGUAGES CXX
