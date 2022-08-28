@@ -66,7 +66,7 @@ jobs:
     name: Build QI-QMP Release (Windows)
     needs: tag_master_and_sync_dev
     if: github.event.pull_request.merged == true
-    uses: ./.github/workflows/build-qi_qmp-windows.yml
+    uses: ./.github/workflows/build-qi-qmp-windows.yml
     secrets:
       qt_shared_dec_key: ${{ secrets.QT_WINDOWS_SHARED_DECRYPT_KEY }}
       qt_static_dec_key: ${{ secrets.QT_WINDOWS_STATIC_DECRYPT_KEY }}
@@ -75,7 +75,7 @@ jobs:
     name: Build QI-QMP Release (Linux)
     needs: tag_master_and_sync_dev
     if: github.event.pull_request.merged == true
-    uses: ./.github/workflows/build-qi_qmp-linux.yml
+    uses: ./.github/workflows/build-qi-qmp-linux.yml
     secrets:
       qt_shared_dec_key: ${{ secrets.QT_LINUX_SHARED_DECRYPT_KEY }}
       qt_static_dec_key: ${{ secrets.QT_LINUX_STATIC_DECRYPT_KEY }}
