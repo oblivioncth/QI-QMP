@@ -12,7 +12,7 @@ option(QI_QMP_DOCS_TARGET "Build Qx documentation" OFF)
 
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
-set(QI_QMP_BASE_VERSION 0.1) # Required for CI/CD
+set(QI_QMP_BASE_VERSION 0.1.1) # Required for CI/CD
 project(QI-QMP
     VERSION ${QI_QMP_BASE_VERSION}
     LANGUAGES CXX
@@ -277,6 +277,15 @@ install(FILES
     "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE"
     COMPONENT ${TOP_LEVEL_INSTALL_COMPONENT}
     DESTINATION .
+    ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
+)
+
+# Install Docs if available
+install(DIRECTORY ${DOC_BUILD_PATH}
+    COMPONENT ${PROJECT_NAME_LC}_docs
+    DESTINATION .
+    CONFIGURATIONS Release
+    OPTIONAL
     ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
 )
 

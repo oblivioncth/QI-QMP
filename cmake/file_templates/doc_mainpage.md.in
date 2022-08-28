@@ -50,7 +50,7 @@ target_link_libraries(example_app PUBLIC QI-QMP::Qmpi)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 5) Include the public header in your code
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
 #include <qi-qmp/qmpi.h>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -69,7 +69,7 @@ QObject::connect(&iQemu, &Qmpi::connected, [](QJsonObject version, QJsonArray ca
 	qDebug() << "Capabilities: " << capabilities;
 });
 QObject::connect(&iQemu, &Qmpi::readyForCommands, [&](){
-	iQemu.execute("query-status", QJsonObject(), R"("query-status")");
+	iQemu.execute("query-status", QJsonObject(), QString("query-status"));
 });
 QObject::connect(&iQemu, &Qmpi::connectionErrorOccured, [](QAbstractSocket::SocketError error){
 	qDebug() << "Socker Error: " << error;
