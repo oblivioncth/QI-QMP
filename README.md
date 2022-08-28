@@ -1,7 +1,7 @@
 # QI-QMP
 QI-QMP is a minuscule C++ library, which utilizes Qt, that provides an interface to QEMU instances via the QEMU Machine Protocol. In other words, this library implements the client side of QMP for C++.
 
-It presents as a QObject derived class, `Qmpi`, that is operated via method functions and connecting to its signals.
+It presents as a QObject derived class, `Qmpi`, that is operated via member functions and connecting to its signals.
 
 This project makes use of the CMake build system generator for both compilation and consumption of the library.
 
