@@ -69,7 +69,7 @@ QObject::connect(&iQemu, &Qmpi::connected, [](QJsonObject version, QJsonArray ca
 	qDebug() << "Capabilities: " << capabilities;
 });
 QObject::connect(&iQemu, &Qmpi::readyForCommands, [&](){
-	iQemu.execute("query-status", QJsonObject(), R"("query-status")");
+	iQemu.execute("query-status", QJsonObject(), QString("query-status"));
 });
 QObject::connect(&iQemu, &Qmpi::connectionErrorOccured, [](QAbstractSocket::SocketError error){
 	qDebug() << "Socker Error: " << error;
