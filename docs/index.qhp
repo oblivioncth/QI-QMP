@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QtHelpProject version="1.0">
+<namespace>org.doxygen.Project</namespace>
+<virtualFolder>doc</virtualFolder>
+<filterSection>
+<filterAttribute>doxygen</filterAttribute>
+<toc>
+<section title="QI-QMP v0.1.1" ref="index.html">
+<section title="Requirements" ref="index.html#autotoc_md0"/>
+<section title="Packaging" ref="index.html#autotoc_md1"/>
+<section title="Getting Started" ref="index.html#autotoc_md2"/>
+<section title="Minimal Example" ref="index.html#autotoc_md3"/>
+<section title="Building From Source" ref="index.html#autotoc_md4">
+<section title="CMake Targets:" ref="index.html#autotoc_md5"/>
+<section title="CMake Install Components:" ref="index.html#autotoc_md6"/>
+<section title="Documentation:" ref="index.html#autotoc_md7"/>
+<section title="Package" ref="index.html#autotoc_md8"/>
+</section>
+<section title="Source Build as a Direct CMake Dependency" ref="index.html#autotoc_md9"/>
+<section title="Class - QMPI" ref="class_qmpi.html"/>
+<section title="Files" ref="files.html">
+<section title="File List" ref="files.html">
+<section title="include" ref="dir_bbb90e3ef9167a594ae33323139a2595.html">
+<section title="qi-qmp" ref="dir_f91d3185a29781ace398d251115febdc.html">
+<section title="qmpi.h" ref="qmpi_8h_source.html"/>
+</section>
+</section>
+</section>
+</section>
+</section>
+</toc>
+<keywords>
+<keyword name="Qmpi" id="Qmpi_" ref="class_qmpi.html"/>
+<keyword name="abort()" id="Qmpi::abort_a3ebb286846217ac3cbf654b84af7a28d" ref="class_qmpi.html#a3ebb286846217ac3cbf654b84af7a28d"/>
+<keyword name="address() const" id="Qmpi::address_aad40a099283cff84c77042b4da3ef5b8" ref="class_qmpi.html#aad40a099283cff84c77042b4da3ef5b8"/>
+<keyword name="AwaitingMessage" id="Qmpi::AwaitingMessage_a22cf8827e951f20ab3473fc51a514012a09e3c8acf789ade5004dd424637ebb17" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a09e3c8acf789ade5004dd424637ebb17"/>
+<keyword name="AwaitingWelcome" id="Qmpi::AwaitingWelcome_a22cf8827e951f20ab3473fc51a514012a975ba78ea95ce426333b92244b771b47" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a975ba78ea95ce426333b92244b771b47"/>
+<keyword name="Closing" id="Qmpi::Closing_a22cf8827e951f20ab3473fc51a514012a4826598bd495e92805776113a12c0f59" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a4826598bd495e92805776113a12c0f59"/>
+<keyword name="CommunicationError" id="Qmpi::CommunicationError_a3462b284802975d8aca845407179d304" ref="class_qmpi.html#a3462b284802975d8aca845407179d304"/>
+<keyword name="WriteFailed" id="Qmpi::WriteFailed_a3462b284802975d8aca845407179d304a9fff6770b80303a935fd76d48a0bcf3b" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a9fff6770b80303a935fd76d48a0bcf3b"/>
+<keyword name="ReadFailed" id="Qmpi::ReadFailed_a3462b284802975d8aca845407179d304a8d159d719cd814861ae2fe7b35408fb4" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a8d159d719cd814861ae2fe7b35408fb4"/>
+<keyword name="TransactionTimeout" id="Qmpi::TransactionTimeout_a3462b284802975d8aca845407179d304a7b503ceec7272f831b49e0cb7c07d4f9" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a7b503ceec7272f831b49e0cb7c07d4f9"/>
+<keyword name="UnexpectedReceive" id="Qmpi::UnexpectedReceive_a3462b284802975d8aca845407179d304aec2bc5e914285a323aa3d91c5efbf0c0" ref="class_qmpi.html#a3462b284802975d8aca845407179d304aec2bc5e914285a323aa3d91c5efbf0c0"/>
+<keyword name="UnexpectedResponse" id="Qmpi::UnexpectedResponse_a3462b284802975d8aca845407179d304a92e55874632b5dc36d1b23196ff06b0d" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a92e55874632b5dc36d1b23196ff06b0d"/>
+<keyword name="communicationErrorOccured(Qmpi::CommunicationError error)" id="Qmpi::communicationErrorOccured_a8e395d196afff18bbb8d1e6d79a3160c" ref="class_qmpi.html#a8e395d196afff18bbb8d1e6d79a3160c"/>
+<keyword name="connected(QJsonObject version, QJsonArray capabilities)" id="Qmpi::connected_a729cdba5acf2e85f1847335a8aa12342" ref="class_qmpi.html#a729cdba5acf2e85f1847335a8aa12342"/>
+<keyword name="Connecting" id="Qmpi::Connecting_a22cf8827e951f20ab3473fc51a514012aec241e66d64bf3e3ac861a61a7a578ee" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012aec241e66d64bf3e3ac861a61a7a578ee"/>
+<keyword name="connectionErrorOccured(QAbstractSocket::SocketError error)" id="Qmpi::connectionErrorOccured_a2dc70bdddd2b286ea4c3e7149025e094" ref="class_qmpi.html#a2dc70bdddd2b286ea4c3e7149025e094"/>
+<keyword name="connectToHost()" id="Qmpi::connectToHost_a598ecce540f9a2ff32abc2ef9ee12d4d" ref="class_qmpi.html#a598ecce540f9a2ff32abc2ef9ee12d4d"/>
+<keyword name="disconnected()" id="Qmpi::disconnected_ac416775b37cced9598fad6b246026d52" ref="class_qmpi.html#ac416775b37cced9598fad6b246026d52"/>
+<keyword name="Disconnected" id="Qmpi::Disconnected_a22cf8827e951f20ab3473fc51a514012a3e82aaf0384673a34789d39bdd980d8b" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a3e82aaf0384673a34789d39bdd980d8b"/>
+<keyword name="disconnectFromHost()" id="Qmpi::disconnectFromHost_a54a1127bfcc0999d8be119b7cd87d792" ref="class_qmpi.html#a54a1127bfcc0999d8be119b7cd87d792"/>
+<keyword name="errorResponseReceived(QString errorClass, QString description, std::any context)" id="Qmpi::errorResponseReceived_ab46f5f4c53938ab85cec8855c6bf31ab" ref="class_qmpi.html#ab46f5f4c53938ab85cec8855c6bf31ab"/>
+<keyword name="eventReceived(QString name, QJsonObject data, QDateTime timestamp)" id="Qmpi::eventReceived_a47e979d7280a3718876a24303802f110" ref="class_qmpi.html#a47e979d7280a3718876a24303802f110"/>
+<keyword name="execute(QString command, QJsonObject args=QJsonObject(), std::any context=std::any())" id="Qmpi::execute_a62dfa6a70436f1159e5582548904df0f" ref="class_qmpi.html#a62dfa6a70436f1159e5582548904df0f"/>
+<keyword name="finished()" id="Qmpi::finished_afc562a57c4d2ece87b7b598d9ac7c9de" ref="class_qmpi.html#afc562a57c4d2ece87b7b598d9ac7c9de"/>
+<keyword name="hostname() const" id="Qmpi::hostname_a7aff8e5be3b7842c549234405ea6821c" ref="class_qmpi.html#a7aff8e5be3b7842c549234405ea6821c"/>
+<keyword name="Idle" id="Qmpi::Idle_a22cf8827e951f20ab3473fc51a514012acd8053effecc6bb9d29269f5ac1ef5e8" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012acd8053effecc6bb9d29269f5ac1ef5e8"/>
+<keyword name="isConnected() const" id="Qmpi::isConnected_a5975260e2822d4b075c168021330055c" ref="class_qmpi.html#a5975260e2822d4b075c168021330055c"/>
+<keyword name="isConnectionActive() const" id="Qmpi::isConnectionActive_a6269906bb08e102d98ec5c88c6d9f011" ref="class_qmpi.html#a6269906bb08e102d98ec5c88c6d9f011"/>
+<keyword name="Negotiating" id="Qmpi::Negotiating_a22cf8827e951f20ab3473fc51a514012ae16e713e5ada206e2cfc3b8ffc1ec080" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012ae16e713e5ada206e2cfc3b8ffc1ec080"/>
+<keyword name="port() const" id="Qmpi::port_a296ed1c6589cc9a6b4b264237a802d7f" ref="class_qmpi.html#a296ed1c6589cc9a6b4b264237a802d7f"/>
+<keyword name="Qmpi(const QHostAddress &amp;address, quint16 port, QObject *parent=nullptr)" id="Qmpi::Qmpi_aa08ec10ef95075ec39f762e12a107409" ref="class_qmpi.html#aa08ec10ef95075ec39f762e12a107409"/>
+<keyword name="Qmpi(const QString &amp;hostname, quint16 port, QObject *parent=nullptr)" id="Qmpi::Qmpi_aae862732e054da2bf29f2f3fa53aecd6" ref="class_qmpi.html#aae862732e054da2bf29f2f3fa53aecd6"/>
+<keyword name="ReadFailed" id="Qmpi::ReadFailed_a3462b284802975d8aca845407179d304a8d159d719cd814861ae2fe7b35408fb4" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a8d159d719cd814861ae2fe7b35408fb4"/>
+<keyword name="ReadingMessage" id="Qmpi::ReadingMessage_a22cf8827e951f20ab3473fc51a514012af5c7e179654e9646b0dc265af90b8e97" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012af5c7e179654e9646b0dc265af90b8e97"/>
+<keyword name="readyForCommands()" id="Qmpi::readyForCommands_af30fa91f8b2b59d06336c3ab2c43f1a2" ref="class_qmpi.html#af30fa91f8b2b59d06336c3ab2c43f1a2"/>
+<keyword name="responseReceived(QJsonValue value, std::any context)" id="Qmpi::responseReceived_afe6496f2e3403c0d55f95f00412298d9" ref="class_qmpi.html#afe6496f2e3403c0d55f95f00412298d9"/>
+<keyword name="SendingCommand" id="Qmpi::SendingCommand_a22cf8827e951f20ab3473fc51a514012a3ce138c18ee1130d0a9e0cc82614ac8a" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a3ce138c18ee1130d0a9e0cc82614ac8a"/>
+<keyword name="setTransactionTimeout(int timeout=30000)" id="Qmpi::setTransactionTimeout_ab32b0dfb08019a962e042ca72e4d6ad1" ref="class_qmpi.html#ab32b0dfb08019a962e042ca72e4d6ad1"/>
+<keyword name="State" id="Qmpi::State_a22cf8827e951f20ab3473fc51a514012" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012"/>
+<keyword name="Disconnected" id="Qmpi::Disconnected_a22cf8827e951f20ab3473fc51a514012a3e82aaf0384673a34789d39bdd980d8b" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a3e82aaf0384673a34789d39bdd980d8b"/>
+<keyword name="Connecting" id="Qmpi::Connecting_a22cf8827e951f20ab3473fc51a514012aec241e66d64bf3e3ac861a61a7a578ee" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012aec241e66d64bf3e3ac861a61a7a578ee"/>
+<keyword name="AwaitingWelcome" id="Qmpi::AwaitingWelcome_a22cf8827e951f20ab3473fc51a514012a975ba78ea95ce426333b92244b771b47" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a975ba78ea95ce426333b92244b771b47"/>
+<keyword name="Negotiating" id="Qmpi::Negotiating_a22cf8827e951f20ab3473fc51a514012ae16e713e5ada206e2cfc3b8ffc1ec080" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012ae16e713e5ada206e2cfc3b8ffc1ec080"/>
+<keyword name="Idle" id="Qmpi::Idle_a22cf8827e951f20ab3473fc51a514012acd8053effecc6bb9d29269f5ac1ef5e8" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012acd8053effecc6bb9d29269f5ac1ef5e8"/>
+<keyword name="Closing" id="Qmpi::Closing_a22cf8827e951f20ab3473fc51a514012a4826598bd495e92805776113a12c0f59" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a4826598bd495e92805776113a12c0f59"/>
+<keyword name="SendingCommand" id="Qmpi::SendingCommand_a22cf8827e951f20ab3473fc51a514012a3ce138c18ee1130d0a9e0cc82614ac8a" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a3ce138c18ee1130d0a9e0cc82614ac8a"/>
+<keyword name="AwaitingMessage" id="Qmpi::AwaitingMessage_a22cf8827e951f20ab3473fc51a514012a09e3c8acf789ade5004dd424637ebb17" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a09e3c8acf789ade5004dd424637ebb17"/>
+<keyword name="ReadingMessage" id="Qmpi::ReadingMessage_a22cf8827e951f20ab3473fc51a514012af5c7e179654e9646b0dc265af90b8e97" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012af5c7e179654e9646b0dc265af90b8e97"/>
+<keyword name="state() const" id="Qmpi::state_ac0d972e08be8d07d059954656394fe1c" ref="class_qmpi.html#ac0d972e08be8d07d059954656394fe1c"/>
+<keyword name="stateChanged(Qmpi::State state)" id="Qmpi::stateChanged_a1c375215ea0eb480ea50ba009d5efb10" ref="class_qmpi.html#a1c375215ea0eb480ea50ba009d5efb10"/>
+<keyword name="transactionTimeout() const" id="Qmpi::transactionTimeout_aa51873023c5d3c90c0e298ddeea8e5b5" ref="class_qmpi.html#aa51873023c5d3c90c0e298ddeea8e5b5"/>
+<keyword name="TransactionTimeout" id="Qmpi::TransactionTimeout_a3462b284802975d8aca845407179d304a7b503ceec7272f831b49e0cb7c07d4f9" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a7b503ceec7272f831b49e0cb7c07d4f9"/>
+<keyword name="UnexpectedReceive" id="Qmpi::UnexpectedReceive_a3462b284802975d8aca845407179d304aec2bc5e914285a323aa3d91c5efbf0c0" ref="class_qmpi.html#a3462b284802975d8aca845407179d304aec2bc5e914285a323aa3d91c5efbf0c0"/>
+<keyword name="UnexpectedResponse" id="Qmpi::UnexpectedResponse_a3462b284802975d8aca845407179d304a92e55874632b5dc36d1b23196ff06b0d" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a92e55874632b5dc36d1b23196ff06b0d"/>
+<keyword name="WriteFailed" id="Qmpi::WriteFailed_a3462b284802975d8aca845407179d304a9fff6770b80303a935fd76d48a0bcf3b" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a9fff6770b80303a935fd76d48a0bcf3b"/>
+<keyword name="~Qmpi()" id="Qmpi::~Qmpi_ad7caff2b8331675f1f6656ca53eea176" ref="class_qmpi.html#ad7caff2b8331675f1f6656ca53eea176"/>
+</keywords>
+<files>
+<file>annotated.html</file>
+<file>bc_s.png</file>
+<file>bdwn.png</file>
+<file>class_qmpi-members.html</file>
+<file>class_qmpi.html</file>
+<file>class_qmpi__coll__graph.svg</file>
+<file>classes.html</file>
+<file>closed.png</file>
+<file>dir_4335ce4a64d0d4f9f4c8f0a782dfdfeb.html</file>
+<file>dir_bbb90e3ef9167a594ae33323139a2595.html</file>
+<file>dir_d1eb22c2ecfd8b50f59e9cbaf8260105.html</file>
+<file>dir_e7fb811e0d0aabfbb6339862a3af7aed.html</file>
+<file>dir_e7fb811e0d0aabfbb6339862a3af7aed_dep.svg</file>
+<file>dir_f91d3185a29781ace398d251115febdc.html</file>
+<file>dir_f91d3185a29781ace398d251115febdc_dep.svg</file>
+<file>doc.png</file>
+<file>doxygen-awesome-customize.css</file>
+<file>doxygen-awesome-darkmode-toggle.js</file>
+<file>doxygen-awesome-fragment-copy-button.js</file>
+<file>doxygen-awesome-paragraph-link.js</file>
+<file>doxygen-awesome-sidebar-only-darkmode-toggle.css</file>
+<file>doxygen-awesome-sidebar-only.css</file>
+<file>doxygen-awesome.css</file>
+<file>doxygen.css</file>
+<file>doxygen.svg</file>
+<file>dynsections.js</file>
+<file>files.html</file>
+<file>folderclosed.png</file>
+<file>folderopen.png</file>
+<file>functions.html</file>
+<file>functions_enum.html</file>
+<file>functions_eval.html</file>
+<file>functions_func.html</file>
+<file>graph_legend.html</file>
+<file>graph_legend.svg</file>
+<file>hierarchy.html</file>
+<file>index.html</file>
+<file>inherit_graph_0.svg</file>
+<file>inherits.html</file>
+<file>jquery.js</file>
+<file>menu.js</file>
+<file>menudata.js</file>
+<file>nav_f.png</file>
+<file>nav_g.png</file>
+<file>nav_h.png</file>
+<file>open.png</file>
+<file>qmpi_8h_source.html</file>
+<file>search/close.svg</file>
+<file>search/mag_sel.svg</file>
+<file>search/search.css</file>
+<file>search/search.js</file>
+<file>search/search_l.png</file>
+<file>search/search_m.png</file>
+<file>search/search_r.png</file>
+<file>splitbar.png</file>
+<file>sync_off.png</file>
+<file>sync_on.png</file>
+<file>tab_a.png</file>
+<file>tab_b.png</file>
+<file>tab_h.png</file>
+<file>tab_s.png</file>
+<file>tabs.css</file>
+</files>
+</filterSection>
+</QtHelpProject>
