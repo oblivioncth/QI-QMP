@@ -280,6 +280,15 @@ install(FILES
     ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
 )
 
+# Install Docs if available
+install(DIRECTORY ${DOC_BUILD_PATH}
+    COMPONENT ${PROJECT_NAME_LC}_docs
+    DESTINATION .
+    CONFIGURATIONS Release
+    OPTIONAL
+    ${SUB_PROJ_EXCLUDE_FROM_ALL} # "EXCLUDE_FROM_ALL" if project is not top-level
+)
+
 #======== Export For In-tree Builds =================
 export(EXPORT ${PROJECT_NAME}Targets
     FILE "${CMAKE_CURRENT_BINARY_DIR}/cmake/${PROJECT_NAME}Targets.cmake"
