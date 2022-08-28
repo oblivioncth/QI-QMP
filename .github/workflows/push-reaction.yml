@@ -1,0 +1,21 @@
+name: QI-QMP Push Reaction
+on:
+  workflow_dispatch:
+  push:
+    branches-ignore:
+    - 'master'
+
+jobs:
+  trigger-windows-build:
+    name: Build QI-QMP (Windows)
+    uses: ./.github/workflows/build-qi-qmp-windows.yml
+    secrets:
+      qt_shared_dec_key: ${{ secrets.QT_WINDOWS_SHARED_DECRYPT_KEY }}
+      qt_static_dec_key: ${{ secrets.QT_WINDOWS_STATIC_DECRYPT_KEY }}
+   
+  trigger-linux-build:
+      name: Build QI-QMP (Linux)
+      uses: ./.github/workflows/build-qi-qmp-linux.yml
+      secrets:
+        qt_shared_dec_key: ${{ secrets.QT_LINUX_SHARED_DECRYPT_KEY }}
+        qt_static_dec_key: ${{ secrets.QT_LINUX_STATIC_DECRYPT_KEY }}   
