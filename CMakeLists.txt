@@ -8,7 +8,7 @@ cmake_minimum_required(VERSION 3.21.1)
 set(TRUE_CMAKE_MINIMUM_REQUIRED ${CMAKE_MINIMUM_REQUIRED_VERSION})
 
 # Configuration options
-option(QI_QMP_DOCS_TARGET "Build Qx documentation" OFF)
+option(QI_QMP_DOCS_TARGET "Build QI-QMP documentation" OFF)
 
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
