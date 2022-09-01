@@ -5,7 +5,7 @@
     <tab type="mainpage" visible="yes" title=""/>
     <tab type="user" url="https://github.com/oblivioncth/QI-QMP/releases" title="Downloads"/>
 	<tab type="pages" visible="yes" title="" intro=""/>
-    <tab type="modules" visible="yes" title="Components" intro="Here is a list of the components in Qx:"/>
+    <tab type="modules" visible="yes" title="Components" intro="Here is a list of the components in QI-QMP:"/>
 	  <tab type="namespacelist" visible="yes" title="Namespaces" intro=""/>
 	<tab type="namespaces" visible="no" title="">
       <tab type="namespacemembers" visible="no" title="" intro=""/>

@@ -30,7 +30,7 @@ Finally, the [Minimal Example](https://oblivioncth.github.io/QI-QMP/index.html#a
 
 ## Pre-built Releases/Artifacts
 
-Releases and some workflows currently provide builds of Qx in the following configurations:
+Releases and some workflows currently provide builds of QI-QMP in the following configurations:
 
 1) - Windows (windows-latest)
     - MSVC (latest)

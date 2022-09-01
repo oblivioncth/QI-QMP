@@ -111,7 +111,7 @@ The CMake project is designed to be used with multi-configuration generators suc
 If QI-QMP is configured as a sub-project, its install components are automatically removed from the `all` component, as to not pollute the install directory of the top-level project.
 
 #### Documentation:
-In order for the `qx_docs` target to be generated the CMake cache variable **QX_DOCS_TARGET** must be set to *ON* when CMake is invoked:
+In order for the `qi_qmp_docs` target to be generated the CMake cache variable **QI_QMP_DOCS_TARGET** must be set to *ON* when CMake is invoked:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cmake.exe (...) -D QI_QMP_DOCS_TARGET=ON
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -120,7 +120,7 @@ The QI_QMP documentation supports two optional, but highly recommended features:
  - Linking to Qt documentation
  - Generating a Qt Compressed Help (.qch) file for use in Qt Creator
 
-In order to enable these features, the CMake variables **QT_DOCS_DIR** and **QT_HELP_GEN_PATH** respectively must be available. Qx tries to set them automatically according to the following defaults, but these can be overridden by passing definitions for the variables to CMake on the command line via @c -D.
+In order to enable these features, the CMake variables **QT_DOCS_DIR** and **QT_HELP_GEN_PATH** respectively must be available. QI-QMP tries to set them automatically according to the following defaults, but these can be overridden by passing definitions for the variables to CMake on the command line via @c -D.
 
     # Optional documentation defaults
     # Here <QT_ROOT> refers to the install directory of a given Qt build
@@ -214,8 +214,8 @@ endfunction()
 Then in your CMake project:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-include(FetchQx)
-fetch_qx(<commitish_here>) # Get QI-QMP
+include(FetchQI-QMP)
+fetch_qi_qmp(<commitish_here>) # Get QI-QMP
 
 add_executable(SomeExe
     ...
