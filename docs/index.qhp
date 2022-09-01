@@ -5,7 +5,7 @@
 <filterSection>
 <filterAttribute>doxygen</filterAttribute>
 <toc>
-<section title="QI-QMP v0.1.1" ref="index.html">
+<section title="QI-QMP v0.1.2" ref="index.html">
 <section title="Requirements" ref="index.html#autotoc_md0"/>
 <section title="Packaging" ref="index.html#autotoc_md1"/>
 <section title="Getting Started" ref="index.html#autotoc_md2"/>
