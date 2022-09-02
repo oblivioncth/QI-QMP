@@ -34,7 +34,13 @@ set(CMAKE_AUTOMOC ON)
 # Add local modules
 set(PROJ_SCRIPTS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 list(APPEND CMAKE_MODULE_PATH "${PROJ_SCRIPTS_PATH}/module")
-include(QI-QMP/Utility)
+
+# Get helper scripts
+include(QI-QMP/FetchOBCMake)
+fetch_ob_cmake("v0.1")
+
+# Include utility functions
+include(OB/Utility)
 
 # General Variables
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -87,7 +93,7 @@ set(PACKAGE_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/out/dist")
 #------------Set Global Build Rules----------------
 
 # Versioning
-include(QI-QMP/VerboseVersioning)
+include(OB/VerboseVersioning)
 setup_verbose_versioning(PROJECT_VERSION_VERBOSE)
 
 #================= Build =========================
@@ -102,11 +108,11 @@ set(QT_FIND_COMPONENTS
 add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # Find Qt package
-include(QI-QMP/BetterFindQt6)
+include(OB/BetterFindQt6)
 find_qt6_package(REQUIRED COMPONENTS ${QT_FIND_COMPONENTS})
 
 # Fetch Qx (build and import from source)
-include(QI-QMP/FetchQx)
+include(OB/FetchQx)
 fetch_qx("v0.3.1")
 
 # Set lib sources
@@ -217,7 +223,7 @@ if(QI_QMP_DOCS_TARGET)
     )
 
     # Determine Qt related doc paths
-    include(QI-QMP/QtDocsHelper)
+    include(OB/QtDocsHelper)
     configure_qt_doc_link(${Qt6_PREFIX_PATH})
 
     # Set Doxygen parameters
