@@ -531,18 +531,18 @@ void Qmpi::setTransactionTimeout(int timeout) { mTransactionTimer.setInterval(ti
 int Qmpi::transactionTimeout() const { return mTransactionTimer.interval(); }
 
 /*!
- *  Attempts to make a connection to the QEMU instance specified by IP address and port
+ *  Attempts to make a connection to the QEMU instance specified by address and port
  *  during the interface's construction.
  *
  *  The interface's state immediately changes to @ref Connecting, followed by
  *  @ref AwaitingWelcome if the underlying socket successfully establishes a connection.
- *  Once the interface has received the server's welcome message connected() is emitted
+ *  Once the interface has received the server's welcome message, connected() is emitted
  *  and Qmpi enters the @ref Negotiating state. At this point capabilities negotiation is
  *  handled automatically since only the base protocol capabilities are currently supported,
  *  upon which readyForCommands() is emitted and the interface enters the @ref Idle state.
  *
  *  At any point, the interface can emit connectionErrorOccurred() or communicationErrorOccurred()
- *  signal an error occurred.
+ *  to signal an error occurred.
  *
  *  @sa state(), and disconnectFromHost().
  */
@@ -722,7 +722,7 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *  @fn void Qmpi::readyForCommands()
  *
  *  This signal is emitted once capabilities negotiation has been completed and the server is ready to
- *  received commands.
+ *  receive commands.
  *
  *  @sa connected().
  */
@@ -755,12 +755,12 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
 /*!
  *  @fn void Qmpi::responseReceived(QJsonValue value, std::any context)
  *
- *  This signal is emitted when the a successful (i.e. `return`) response is received from the server
+ *  This signal is emitted when a success (i.e. `return`) response is received from the server
  *  after executing a command.
  *
- *  @a value contains the return value of the command, which may be an empty QJsonObject if the command
+ *  @a value contains the return value of the command, which will be an empty QJsonObject if the command
  *  does not return data, while @a context contains the context object provided when the command was
- *  executed, if it was set.
+ *  executed, if set.
  *
  *  @sa errorResponseReceived().
  */
@@ -807,7 +807,7 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *
  *  @a errorClass contains the type of error and @a description contains a human readable
  *  summary of the error, while @a context contains the context object provided when the
- *  command was executed, if it was set.
+ *  command was executed, if set.
  *
  *  @sa responseReceived().
  */
