@@ -47,7 +47,7 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">QI-QMP<span id="projectnumber">&#160;v0.1.2</span>
+   <div id="projectname">QI-QMP<span id="projectnumber">&#160;v0.1.2.1</span>
    </div>
    <div id="projectbrief">Qt-based Interface for QEMU Machine Protocol</div>
   </td>
@@ -802,9 +802,9 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" target="
         </tr>
       </table>
 </div><div class="memdoc">
-<p >Attempts to make a connection to the QEMU instance specified by IP address and port during the interface's construction.</p>
-<p >The interface's state immediately changes to <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012aec241e66d64bf3e3ac861a61a7a578ee">Connecting</a>, followed by <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a975ba78ea95ce426333b92244b771b47">AwaitingWelcome</a> if the underlying socket successfully establishes a connection. Once the interface has received the server's welcome message <a class="el" href="class_qmpi.html#a729cdba5acf2e85f1847335a8aa12342">connected()</a> is emitted and <a class="el" href="class_qmpi.html" title="The Qmpi class is an interface through which to communicate with a QEMU instance via the QEMU Machine...">Qmpi</a> enters the <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012ae16e713e5ada206e2cfc3b8ffc1ec080">Negotiating</a> state. At this point capabilities negotiation is handled automatically since only the base protocol capabilities are currently supported, upon which <a class="el" href="class_qmpi.html#af30fa91f8b2b59d06336c3ab2c43f1a2">readyForCommands()</a> is emitted and the interface enters the <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012acd8053effecc6bb9d29269f5ac1ef5e8">Idle</a> state.</p>
-<p >At any point, the interface can emit connectionErrorOccurred() or communicationErrorOccurred() signal an error occurred.</p>
+<p >Attempts to make a connection to the QEMU instance specified by address and port during the interface's construction.</p>
+<p >The interface's state immediately changes to <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012aec241e66d64bf3e3ac861a61a7a578ee">Connecting</a>, followed by <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012a975ba78ea95ce426333b92244b771b47">AwaitingWelcome</a> if the underlying socket successfully establishes a connection. Once the interface has received the server's welcome message, <a class="el" href="class_qmpi.html#a729cdba5acf2e85f1847335a8aa12342">connected()</a> is emitted and <a class="el" href="class_qmpi.html" title="The Qmpi class is an interface through which to communicate with a QEMU instance via the QEMU Machine...">Qmpi</a> enters the <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012ae16e713e5ada206e2cfc3b8ffc1ec080">Negotiating</a> state. At this point capabilities negotiation is handled automatically since only the base protocol capabilities are currently supported, upon which <a class="el" href="class_qmpi.html#af30fa91f8b2b59d06336c3ab2c43f1a2">readyForCommands()</a> is emitted and the interface enters the <a class="el" href="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012acd8053effecc6bb9d29269f5ac1ef5e8">Idle</a> state.</p>
+<p >At any point, the interface can emit connectionErrorOccurred() or communicationErrorOccurred() to signal an error occurred.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qmpi.html#ac0d972e08be8d07d059954656394fe1c">state()</a>, and <a class="el" href="class_qmpi.html#a54a1127bfcc0999d8be119b7cd87d792">disconnectFromHost()</a>. </dd></dl>
 
 </div>
@@ -897,7 +897,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" target="
 </table>
 </div><div class="memdoc">
 <p >This signal is emitted when the an error response is received from the server after executing a command.</p>
-<p ><em>errorClass</em> contains the type of error and <em>description</em> contains a human readable summary of the error, while <em>context</em> contains the context object provided when the command was executed, if it was set.</p>
+<p ><em>errorClass</em> contains the type of error and <em>description</em> contains a human readable summary of the error, while <em>context</em> contains the context object provided when the command was executed, if set.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qmpi.html#afe6496f2e3403c0d55f95f00412298d9">responseReceived()</a>. </dd></dl>
 
 </div>
@@ -1121,7 +1121,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" target="
   </tr>
 </table>
 </div><div class="memdoc">
-<p >This signal is emitted once capabilities negotiation has been completed and the server is ready to received commands.</p>
+<p >This signal is emitted once capabilities negotiation has been completed and the server is ready to receive commands.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qmpi.html#a729cdba5acf2e85f1847335a8aa12342">connected()</a>. </dd></dl>
 
 </div>
@@ -1159,8 +1159,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="elRef" target="
   </tr>
 </table>
 </div><div class="memdoc">
-<p >This signal is emitted when the a successful (i.e. <code>return</code>) response is received from the server after executing a command.</p>
-<p ><em>value</em> contains the return value of the command, which may be an empty <a class="elRef" target="_blank" href="https://doc.qt.io/qt-6/qjsonobject.html">QJsonObject</a> if the command does not return data, while <em>context</em> contains the context object provided when the command was executed, if it was set.</p>
+<p >This signal is emitted when a success (i.e. <code>return</code>) response is received from the server after executing a command.</p>
+<p ><em>value</em> contains the return value of the command, which will be an empty <a class="elRef" target="_blank" href="https://doc.qt.io/qt-6/qjsonobject.html">QJsonObject</a> if the command does not return data, while <em>context</em> contains the context object provided when the command was executed, if set.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="class_qmpi.html#ab46f5f4c53938ab85cec8855c6bf31ab">errorResponseReceived()</a>. </dd></dl>
 
 </div>
