@@ -122,14 +122,12 @@ Qmpi::Qmpi(quint16 port, QObject* parent) :
     mTransactionTimer.setSingleShot(true);
     mTransactionTimer.setInterval(30000);
 
-    // Connections - Local Handling
-    connect(&mSocket, &QTcpSocket::stateChanged, this, &Qmpi::handleSocketStateChange);
+    // Connections
     connect(&mSocket, &QTcpSocket::readyRead, this, &Qmpi::handleReceivedData);
     connect(&mTransactionTimer, &QTimer::timeout, this, &Qmpi::handleTransactionTimeout);
-
-    // Connections - Straight Forwards
-    connect(&mSocket, &QTcpSocket::errorOccurred, this, &Qmpi::connectionErrorOccured);
-    connect(&mSocket, &QTcpSocket::disconnected, this, &Qmpi::disconnected);
+    connect(&mSocket, &QTcpSocket::connected, this, &Qmpi::handleSocketConnect);
+    connect(&mSocket, &QTcpSocket::errorOccurred, this, &Qmpi::handleSocketError);
+    connect(&mSocket, &QTcpSocket::disconnected, this, &Qmpi::handleSocketDisconnect);
 }
 //Public:
 /*!
@@ -216,6 +214,12 @@ void Qmpi::raiseCommunicationError(CommunicationError error)
 {
     emit communicationErrorOccured(error);
     mSocket.abort();
+}
+
+void Qmpi::finish()
+{
+    reset();
+    emit finished();
 }
 
 void Qmpi::negotiateCapabilities()
@@ -657,27 +661,24 @@ void Qmpi::execute(QString command, QJsonObject args, std::any context)
 
 //-Signals & Slots------------------------------------------------------------------------------------------------------------
 //Private Slots:
-void Qmpi::handleSocketStateChange(QAbstractSocket::SocketState socketState)
+void Qmpi::handleSocketConnect()
 {
-    /* Provides finer awareness of socket state
-     * i.e. disconnected isn't emitted if connection fails so if only using that signal cleanup may also
-     * need to be prompted from the slot connected to errorOccurred by explicitly checking for a failed connection
-     * there. But this way we can just check for a change back to the Unconnected state.
-     */
-    switch(socketState)
-    {
-        case QAbstractSocket::SocketState::ConnectedState:
-            changeState(State::AwaitingWelcome);
-            startTransactionTimer(); // Enforce timeout for welcome message
-            break;
-        case QAbstractSocket::SocketState::UnconnectedState:
-            changeState(State::Disconnected);
-            reset();
-            emit finished();
-            break;
-        default:
-            break;
-    }
+    changeState(State::AwaitingWelcome);
+    startTransactionTimer(); // Enforce timeout for welcome message
+}
+
+void Qmpi::handleSocketError(QAbstractSocket::SocketError socketError)
+{
+    changeState(State::Disconnected);
+    emit connectionErrorOccured(socketError);
+    finish();
+}
+
+void Qmpi::handleSocketDisconnect()
+{
+    changeState(State::Disconnected);
+    emit disconnected();
+    finish();
 }
 
 void Qmpi::handleReceivedData()

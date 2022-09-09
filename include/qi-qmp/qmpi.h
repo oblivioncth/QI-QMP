@@ -111,6 +111,7 @@ private:
     bool stopTransactionTimer();
     void reset();
     void raiseCommunicationError(CommunicationError error);
+    void finish();
 
     // Setup
     void negotiateCapabilities();
@@ -149,7 +150,9 @@ public:
 
 //-Signals & Slots------------------------------------------------------------------------------------------------------------
 private slots:
-    void handleSocketStateChange(QAbstractSocket::SocketState socketState);
+    void handleSocketConnect();
+    void handleSocketError(QAbstractSocket::SocketError socketError);
+    void handleSocketDisconnect();
     void handleReceivedData();
     void handleTransactionTimeout();
 
