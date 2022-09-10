@@ -669,9 +669,13 @@ void Qmpi::handleSocketConnect()
 
 void Qmpi::handleSocketError(QAbstractSocket::SocketError socketError)
 {
+    bool wasConnected = isConnected();
     changeState(State::Disconnected);
     emit connectionErrorOccured(socketError);
-    finish();
+
+    // If a connection was never established, disconnected() won't be fired so finish() has to be run from here
+    if(!wasConnected)
+        finish();
 }
 
 void Qmpi::handleSocketDisconnect()
