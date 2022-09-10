@@ -116,6 +116,7 @@
 Qmpi::Qmpi(quint16 port, QObject* parent) :
     QObject(parent),
     mPort(port),
+    mSocket(this),
     mState(Disconnected)
 {
     // Other init
