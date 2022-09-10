@@ -111,6 +111,7 @@ private:
     bool stopTransactionTimer();
     void reset();
     void raiseCommunicationError(CommunicationError error);
+    void finish();
 
     // Setup
     void negotiateCapabilities();
