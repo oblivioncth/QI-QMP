@@ -12,7 +12,7 @@ option(QI_QMP_DOCS_TARGET "Build QI-QMP documentation" OFF)
 
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
-set(QI_QMP_BASE_VERSION 0.1.2.1) # Required for CI/CD
+set(QI_QMP_BASE_VERSION 0.1.3) # Required for CI/CD
 project(QI-QMP
     VERSION ${QI_QMP_BASE_VERSION}
     LANGUAGES CXX
@@ -113,7 +113,7 @@ find_qt6_package(REQUIRED COMPONENTS ${QT_FIND_COMPONENTS})
 
 # Fetch Qx (build and import from source)
 include(OB/FetchQx)
-fetch_qx("v0.3.1")
+fetch_qx("v0.4")
 
 # Set lib sources
 set(INCLUDE_HEADERS
