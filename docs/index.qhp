@@ -5,7 +5,7 @@
 <filterSection>
 <filterAttribute>doxygen</filterAttribute>
 <toc>
-<section title="QI-QMP v0.1.2.1" ref="index.html">
+<section title="QI-QMP v0.1.3" ref="index.html">
 <section title="Requirements" ref="index.html#autotoc_md0"/>
 <section title="Packaging" ref="index.html#autotoc_md1"/>
 <section title="Getting Started" ref="index.html#autotoc_md2"/>
@@ -80,8 +80,8 @@
 <keyword name="ReadingMessage" id="Qmpi::ReadingMessage_a22cf8827e951f20ab3473fc51a514012af5c7e179654e9646b0dc265af90b8e97" ref="class_qmpi.html#a22cf8827e951f20ab3473fc51a514012af5c7e179654e9646b0dc265af90b8e97"/>
 <keyword name="state() const" id="Qmpi::state_ac0d972e08be8d07d059954656394fe1c" ref="class_qmpi.html#ac0d972e08be8d07d059954656394fe1c"/>
 <keyword name="stateChanged(Qmpi::State state)" id="Qmpi::stateChanged_a1c375215ea0eb480ea50ba009d5efb10" ref="class_qmpi.html#a1c375215ea0eb480ea50ba009d5efb10"/>
-<keyword name="transactionTimeout() const" id="Qmpi::transactionTimeout_aa51873023c5d3c90c0e298ddeea8e5b5" ref="class_qmpi.html#aa51873023c5d3c90c0e298ddeea8e5b5"/>
 <keyword name="TransactionTimeout" id="Qmpi::TransactionTimeout_a3462b284802975d8aca845407179d304a7b503ceec7272f831b49e0cb7c07d4f9" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a7b503ceec7272f831b49e0cb7c07d4f9"/>
+<keyword name="transactionTimeout() const" id="Qmpi::transactionTimeout_aa51873023c5d3c90c0e298ddeea8e5b5" ref="class_qmpi.html#aa51873023c5d3c90c0e298ddeea8e5b5"/>
 <keyword name="UnexpectedReceive" id="Qmpi::UnexpectedReceive_a3462b284802975d8aca845407179d304aec2bc5e914285a323aa3d91c5efbf0c0" ref="class_qmpi.html#a3462b284802975d8aca845407179d304aec2bc5e914285a323aa3d91c5efbf0c0"/>
 <keyword name="UnexpectedResponse" id="Qmpi::UnexpectedResponse_a3462b284802975d8aca845407179d304a92e55874632b5dc36d1b23196ff06b0d" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a92e55874632b5dc36d1b23196ff06b0d"/>
 <keyword name="WriteFailed" id="Qmpi::WriteFailed_a3462b284802975d8aca845407179d304a9fff6770b80303a935fd76d48a0bcf3b" ref="class_qmpi.html#a3462b284802975d8aca845407179d304a9fff6770b80303a935fd76d48a0bcf3b"/>
