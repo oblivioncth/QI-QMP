@@ -116,6 +116,7 @@
 Qmpi::Qmpi(quint16 port, QObject* parent) :
     QObject(parent),
     mPort(port),
+    mSocket(this),
     mState(Disconnected)
 {
     // Other init
@@ -216,6 +217,12 @@ void Qmpi::raiseCommunicationError(CommunicationError error)
 {
     emit communicationErrorOccured(error);
     mSocket.abort();
+}
+
+void Qmpi::finish()
+{
+    reset();
+    emit finished();
 }
 
 void Qmpi::negotiateCapabilities()
@@ -586,6 +593,9 @@ void Qmpi::disconnectFromHost()
  */
 void Qmpi::abort()
 {
+    // TODO: May want to have this emit an 'abort' error since QAbstractSocket doesn't do that.
+    // It would have to be part of CommunicationError
+
     // Bail if already disconnected
     if(!isConnectionActive())
         return;
@@ -672,8 +682,23 @@ void Qmpi::handleSocketStateChange(QAbstractSocket::SocketState socketState)
             break;
         case QAbstractSocket::SocketState::UnconnectedState:
             changeState(State::Disconnected);
-            reset();
-            emit finished();
+            /* NOTE: The implementation of QAbstractSocket inconstantly fires related stateChanged() and
+             * errorOccurred() signals, so sometimes an error that caused the socket to change to the
+             * disconnected state will have its corresponding signal arrive after the state change one,
+             * meaning that seeing stateChanged(SocketState::UnconnectedState) does not necessarily mean
+             * the socket is 100% finished and has emitted everything else. To get around this, a
+             * single shot timer is used to queue `finished()` so that the current routine within
+             * QAbstractSocket that emitted stateChanged() can finish emitting anything else (since
+             * they will be via direct connections to here) before the interface emits finished.
+             *
+             * This should guarantee that finish() is only emitted after the socket is truly "done", though
+             * potentially if QAbstractSocket uses internal queued connections and the signals it fires
+             * after the one that triggered this slot are queued, they would be processed after finished()
+             * here since it will get queued first. Realistically that shouldn't be the case however. In the
+             * event this comes to pass, there is no choice but to use the wonky approach that was reverted
+             * via bfdef954005809a6de527e6dc05b74d1ec51e11f
+             */
+            QTimer::singleShot(0, this, &Qmpi::finish);
             break;
         default:
             break;
