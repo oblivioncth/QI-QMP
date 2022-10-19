@@ -117,7 +117,7 @@ jobs:
         echo "Build complete."
     - name: Get QI-QMP artifact name
       id: get_artifact_name
-      run: echo "::set-output name=${{ env.artifact_output_var }}::$((Get-ChildItem -Path "${{ env.qi_qmp_package_path }}" -Filter *.zip)[0].BaseName)"
+      run: echo "${{ env.artifact_output_var }}=$((Get-ChildItem -Path "${{ env.qi_qmp_package_path }}" -Filter *.zip)[0].BaseName)" >> $Env:GITHUB_OUTPUT
     - name: Upload QI-QMP build artifact
       uses: actions/upload-artifact@v3
       with:
