@@ -1,7 +1,7 @@
 #================= Project Setup ==========================
 
 # CMake
-cmake_minimum_required(VERSION 3.21.1)
+cmake_minimum_required(VERSION 3.25.0)
 
 # Store minimum required version for later since it can be overwritten
 # by find_package/macro calls in dependencies (stupid)

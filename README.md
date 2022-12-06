@@ -22,7 +22,7 @@ Finally, the [Minimal Example](https://oblivioncth.github.io/QI-QMP/index.html#a
 ### Summary
 
  - C++20
- - CMake 3.21.1
+ - CMake 3.25.0
 
 ### Dependencies
 - Qt6
