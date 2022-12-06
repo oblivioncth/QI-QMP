@@ -12,9 +12,8 @@ option(QI_QMP_DOCS_TARGET "Build QI-QMP documentation" OFF)
 
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
-set(QI_QMP_BASE_VERSION 0.1.3) # Required for CI/CD
 project(QI-QMP
-    VERSION ${QI_QMP_BASE_VERSION}
+    VERSION 0.1.3
     LANGUAGES CXX
     DESCRIPTION "Qt-based Interface for QEMU Machine Protocol"
 )
