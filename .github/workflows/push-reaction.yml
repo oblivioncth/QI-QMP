@@ -10,12 +10,10 @@ jobs:
     name: Build QI-QMP (Windows)
     uses: ./.github/workflows/build-qi-qmp-windows.yml
     secrets:
-      qt_shared_url: ${{ secrets.QT_WINDOWS_SHARED_URL }}
-      qt_static_url: ${{ secrets.QT_WINDOWS_STATIC_URL }}
+      qt_ffynnon_cred: ${{ secrets.OBYBOT_FFYNNON_CREDS }}
    
   trigger-linux-build:
-      name: Build QI-QMP (Linux)
-      uses: ./.github/workflows/build-qi-qmp-linux.yml
-      secrets:
-        qt_shared_url: ${{ secrets.QT_LINUX_SHARED_URL }}
-        qt_static_url: ${{ secrets.QT_LINUX_STATIC_URL }}   
+    name: Build QI-QMP (Linux)
+    uses: ./.github/workflows/build-qi-qmp-linux.yml
+    secrets:
+      qt_ffynnon_cred: ${{ secrets.OBYBOT_FFYNNON_CREDS }}
