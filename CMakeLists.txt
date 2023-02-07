@@ -13,7 +13,7 @@ option(QI_QMP_DOCS_TARGET "Build QI-QMP documentation" OFF)
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
 project(QI-QMP
-    VERSION 0.1.3
+    VERSION 0.1.4
     LANGUAGES CXX
     DESCRIPTION "Qt-based Interface for QEMU Machine Protocol"
 )
