@@ -567,7 +567,7 @@ void Qmpi::connectToHost()
     else if(std::holds_alternative<QString>(mHostId))
         mSocket.connectToHost(std::get<QString>(mHostId), mPort);
     else
-        throw std::runtime_error(std::string(Q_FUNC_INFO) + " unhandled host id variant");
+        qFatal("Unhandled host id variant");
 }
 
 /*!
@@ -607,7 +607,7 @@ void Qmpi::abort()
 }
 
 /*!
- *  Returns @c true if the interfaces connection is active is any way. That is, the interface is in any
+ *  Returns @c true if the interface's connection is active is any way. That is, the interface is in any
  *  state other than @ref Disconnected; otherwise, returns @c false.
  *
  *  @sa isConnected().
@@ -615,7 +615,7 @@ void Qmpi::abort()
 bool Qmpi::isConnectionActive() const { return mState != State::Disconnected; }
 
 /*!
- *  Returns @c true if the interfaces has fully connected to the QEMU instance, meaning the underlying
+ *  Returns @c true if the interface has fully connected to the QEMU instance, meaning the underlying
  *  socket successfully established a connection and the server's greeting was received.
  *
  *  @sa isConnectionActive().
@@ -769,7 +769,7 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *  @fn void Qmpi::finished()
  *
  *  This signal is emitted when the interface returns to the @ref Disconnected state for any reason,
- *  regardless of whether or a complete connection to the server was ever achieved.
+ *  regardless of whether or not a complete connection to the server was ever achieved.
  *
  *  @warning If you need to delete the sender() of this signal in a slot connected to it, use the
  *  deleteLater() function.

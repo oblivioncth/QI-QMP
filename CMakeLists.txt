@@ -1,7 +1,7 @@
 #================= Project Setup ==========================
 
 # CMake
-cmake_minimum_required(VERSION 3.21.1)
+cmake_minimum_required(VERSION 3.25.0)
 
 # Store minimum required version for later since it can be overwritten
 # by find_package/macro calls in dependencies (stupid)
@@ -12,9 +12,8 @@ option(QI_QMP_DOCS_TARGET "Build QI-QMP documentation" OFF)
 
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
-set(QI_QMP_BASE_VERSION 0.1.3) # Required for CI/CD
 project(QI-QMP
-    VERSION ${QI_QMP_BASE_VERSION}
+    VERSION 0.1.4
     LANGUAGES CXX
     DESCRIPTION "Qt-based Interface for QEMU Machine Protocol"
 )
@@ -37,7 +36,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJ_SCRIPTS_PATH}/module")
 
 # Get helper scripts
 include(QI-QMP/FetchOBCMake)
-fetch_ob_cmake("v0.1")
+fetch_ob_cmake("v0.2")
 
 # Include utility functions
 include(OB/Utility)
@@ -113,7 +112,11 @@ find_qt6_package(REQUIRED COMPONENTS ${QT_FIND_COMPONENTS})
 
 # Fetch Qx (build and import from source)
 include(OB/FetchQx)
-fetch_qx("v0.4")
+fetch_qx(
+    REF "v0.4.3"
+    COMPONENTS
+        Core
+)
 
 # Set lib sources
 set(INCLUDE_HEADERS
