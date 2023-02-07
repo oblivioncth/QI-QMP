@@ -113,7 +113,7 @@ find_qt6_package(REQUIRED COMPONENTS ${QT_FIND_COMPONENTS})
 # Fetch Qx (build and import from source)
 include(OB/FetchQx)
 fetch_qx(
-    REF "v0.4.2"
+    REF "v0.4.3"
     COMPONENTS
         Core
 )
