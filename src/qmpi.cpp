@@ -137,7 +137,7 @@ Qmpi::Qmpi(QObject* parent) :
     connect(&mTransactionTimer, &QTimer::timeout, this, &Qmpi::handleTransactionTimeout);
 
     // Connections - Straight Forwards
-    connect(&mSocket, &QTcpSocket::errorOccurred, this, &Qmpi::connectionErrorOccured);
+    connect(&mSocket, &QTcpSocket::errorOccurred, this, &Qmpi::connectionErrorOccurred);
     connect(&mSocket, &QTcpSocket::disconnected, this, &Qmpi::disconnected);
 }
 
@@ -225,7 +225,7 @@ void Qmpi::reset()
 
 void Qmpi::raiseCommunicationError(CommunicationError error)
 {
-    emit communicationErrorOccured(error);
+    emit communicationErrorOccurred(error);
     mSocket.abort();
 }
 

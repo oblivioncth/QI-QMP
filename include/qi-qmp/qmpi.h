@@ -163,8 +163,8 @@ signals:
     void finished(); // Emitted when the interface is fully closed, regardless of how it got there
     void responseReceived(QJsonValue value, std::any context);
     void eventReceived(QString name, QJsonObject data, QDateTime timestamp);
-    void connectionErrorOccured(QAbstractSocket::SocketError error); // Will be disconnected after
-    void communicationErrorOccured(Qmpi::CommunicationError error); // Will disconnect after
+    void connectionErrorOccurred(QAbstractSocket::SocketError error); // Will be disconnected after
+    void communicationErrorOccurred(Qmpi::CommunicationError error); // Will disconnect after
     void errorResponseReceived(QString errorClass, QString description, std::any context); // Will not disconnect after
     void stateChanged(Qmpi::State state);
 };
