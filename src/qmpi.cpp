@@ -112,10 +112,18 @@
  */
 
 //-Constructor-------------------------------------------------------------
-//Private:
-Qmpi::Qmpi(quint16 port, QObject* parent) :
+//Public:
+/*!
+ *  Constructs a QMP interface with parent @a parent.
+ *
+ *  The connection address is set to QHostAddress::LocalHost and the port is set to 4444.
+ *
+ *  @sa setAddress() and setPort().
+ */
+Qmpi::Qmpi(QObject* parent) :
     QObject(parent),
-    mPort(port),
+    mPort(4444),
+    mHostId(QHostAddress::LocalHost),
     mSocket(this),
     mState(Disconnected)
 {
@@ -129,10 +137,10 @@ Qmpi::Qmpi(quint16 port, QObject* parent) :
     connect(&mTransactionTimer, &QTimer::timeout, this, &Qmpi::handleTransactionTimeout);
 
     // Connections - Straight Forwards
-    connect(&mSocket, &QTcpSocket::errorOccurred, this, &Qmpi::connectionErrorOccured);
+    connect(&mSocket, &QTcpSocket::errorOccurred, this, &Qmpi::connectionErrorOccurred);
     connect(&mSocket, &QTcpSocket::disconnected, this, &Qmpi::disconnected);
 }
-//Public:
+
 /*!
  *  Constructs a QMP interface configured to connect to a QEMU instance at address @a address on port
  *  @a port. @a port is specified in native byte order.
@@ -140,8 +148,9 @@ Qmpi::Qmpi(quint16 port, QObject* parent) :
  *  The parent of the object is set to @a parent.
  */
 Qmpi::Qmpi(const QHostAddress& address, quint16 port, QObject* parent) :
-      Qmpi(port, parent)
+      Qmpi(parent)
 {
+    mPort = port;
     mHostId = address;
 }
 
@@ -154,8 +163,9 @@ Qmpi::Qmpi(const QHostAddress& address, quint16 port, QObject* parent) :
  *  The parent of the object is set to @a parent.
  */
 Qmpi::Qmpi(const QString& hostname, quint16 port, QObject* parent) :
-    Qmpi(port, parent)
+    Qmpi(parent)
 {
+    mPort = port;
     mHostId = hostname;
 }
 
@@ -215,7 +225,7 @@ void Qmpi::reset()
 
 void Qmpi::raiseCommunicationError(CommunicationError error)
 {
-    emit communicationErrorOccured(error);
+    emit communicationErrorOccurred(error);
     mSocket.abort();
 }
 
@@ -474,10 +484,15 @@ bool Qmpi::processEventMessage(const QJsonObject& event)
 
 //Public:
 /*!
- *  Returns the IP address the interface is configured to connect to if it was constructed using a
+ *  Returns the state of the interface.
+ */
+Qmpi::State Qmpi::state() const { return mState; }
+
+/*!
+ *  Returns the IP address the interface is configured to connect to if it was set as a
  *  QHostAddress; otherwise, returns QHostAddress::Null.
  *
- *  @sa port().
+ *  @sa setAddress() and port().
  */
 QHostAddress Qmpi::address() const
 {
@@ -486,10 +501,10 @@ QHostAddress Qmpi::address() const
 }
 
 /*!
- *  Returns the hostname the interface is configured to connect to if it was constructed using a
+ *  Returns the hostname the interface is configured to connect to if it was set as a
  *  hostname; otherwise, returns a null string.
  *
- *  @sa port().
+ *  @sa setHostname() and port().
  */
 QString Qmpi::hostname() const
 {
@@ -500,14 +515,57 @@ QString Qmpi::hostname() const
 /*!
  *  Returns the port the interface is configured to connect through.
  *
- *  @sa address().
+ *  @sa setPort() and address().
  */
 quint16 Qmpi::port() const { return mPort; }
 
 /*!
- *  Returns the state of the interface.
+ *  Returns the transaction timeout of the interface.
+ *
+ *  The default is 30,000 milliseconds.
+ *
+ *  @sa setTransactionTimeout().
  */
-Qmpi::State Qmpi::state() const { return mState; }
+int Qmpi::transactionTimeout() const { return mTransactionTimer.interval(); }
+
+/*!
+ *  Sets the address of the interface to @a address.
+ *
+ *  This function does nothing if the connection is currently active
+ *
+ *  @sa address() and setHostname().
+ */
+void Qmpi::setAddress(const QHostAddress address)
+{
+    if(!isConnectionActive())
+        mHostId = address;
+}
+
+/*!
+ *  Sets the hostname of the interface to @a hostname.
+ *
+ *  This function does nothing if the connection is currently active
+ *
+ *  @sa hostname() and setAddress().
+ */
+void Qmpi::setHostname(const QString hostname)
+{
+    if(!isConnectionActive())
+        mHostId = hostname;
+}
+
+/*!
+ *  Sets the port, specified in native byte order, of the interface to @a port.
+ *
+ *  This function does nothing if the connection is currently active
+ *
+ *  @sa port() and setAddress().
+ */
+void Qmpi::setPort(quint16 port)
+{
+    if(!isConnectionActive())
+        mPort = port;
+}
 
 /*!
  *  Sets the transaction timeout of the interface to @a timeout.
@@ -529,17 +587,8 @@ Qmpi::State Qmpi::state() const { return mState; }
 void Qmpi::setTransactionTimeout(int timeout) { mTransactionTimer.setInterval(timeout); }
 
 /*!
- *  Returns the transaction timeout of the interface.
- *
- *  The default is 30,000 milliseconds.
- *
- *  @sa setTransactionTimeout().
- */
-int Qmpi::transactionTimeout() const { return mTransactionTimer.interval(); }
-
-/*!
- *  Attempts to make a connection to the QEMU instance specified by address and port
- *  during the interface's construction.
+ *  Attempts to make a connection to the QEMU instance via the interfaces configured
+ *  address and port.
  *
  *  The interface's state immediately changes to @ref Connecting, followed by
  *  @ref AwaitingWelcome if the underlying socket successfully establishes a connection.
