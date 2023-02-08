@@ -92,10 +92,8 @@ private:
     QTimer mTransactionTimer;
 
 //-Constructor------------------------------------------------------------------------------------------------------------
-private:
-    explicit Qmpi(quint16 port, QObject* parent);
-
 public:
+    explicit Qmpi(QObject* parent = nullptr);
     explicit Qmpi(const QHostAddress& address, quint16 port, QObject* parent = nullptr);
     explicit Qmpi(const QString& hostname, quint16 port, QObject* parent = nullptr);
 
@@ -129,14 +127,18 @@ private:
 
 public:
     // Info
-    QHostAddress address() const;
-    QString hostname() const;
-    quint16 port() const;
     State state() const;
 
     // Properties
-    void setTransactionTimeout(int timeout = 30000);
+    QHostAddress address() const;
+    QString hostname() const;
+    quint16 port() const;
     int transactionTimeout() const;
+
+    void setAddress(const QHostAddress address);
+    void setHostname(const QString hostname);
+    void setPort(quint16 port);
+    void setTransactionTimeout(int timeout = 30000);
 
     // Connection
     void connectToHost();
@@ -161,8 +163,8 @@ signals:
     void finished(); // Emitted when the interface is fully closed, regardless of how it got there
     void responseReceived(QJsonValue value, std::any context);
     void eventReceived(QString name, QJsonObject data, QDateTime timestamp);
-    void connectionErrorOccured(QAbstractSocket::SocketError error); // Will be disconnected after
-    void communicationErrorOccured(Qmpi::CommunicationError error); // Will disconnect after
+    void connectionErrorOccurred(QAbstractSocket::SocketError error); // Will be disconnected after
+    void communicationErrorOccurred(Qmpi::CommunicationError error); // Will disconnect after
     void errorResponseReceived(QString errorClass, QString description, std::any context); // Will not disconnect after
     void stateChanged(Qmpi::State state);
 };
