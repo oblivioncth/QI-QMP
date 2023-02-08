@@ -518,7 +518,7 @@ Qmpi::State Qmpi::state() const { return mState; }
  *  The received message does not have to be a response to that particular command; any
  *  received message will reset the timeout, while sending additional commands will not.
  *
- *  If a transaction timeout occurs communicationErrorOccured() will be emitted with the
+ *  If a transaction timeout occurs communicationErrorOccurred() will be emitted with the
  *  value @ref TransactionTimeout. If all sent commands have been processed and the
  *  interface is not currently expecting any responses the timeout will not be in effect.
  *
@@ -805,7 +805,7 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  */
 
 /*!
- *  @fn void Qmpi::connectionErrorOccured(QAbstractSocket::SocketError error)
+ *  @fn void Qmpi::connectionErrorOccurred(QAbstractSocket::SocketError error)
  *
  *  This signal is emitted when the underlying socket experiences a connection error, with @a error
  *  containing the type of error.
@@ -815,7 +815,7 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  */
 
 /*!
- *  @fn void Qmpi::communicationErrorOccured(Qmpi::CommunicationError error)
+ *  @fn void Qmpi::communicationErrorOccurred(Qmpi::CommunicationError error)
  *
  *  This signal is emitted when IO with the server fails, the known QMP protocol is violated during communication,
  *  or the server otherwise behaves unexpectedly. @a error contains the type of communication error.
