@@ -6,7 +6,6 @@ on:
         description: 'Credentials for getting Qt from Ffynnon'
         required: true
 env:
-  general_download_dir: ${{ github.workspace }}/Download
   qt_install_dir: ${{ github.workspace }}/Qt/Install
   qi_qmp_src_suffix: QI-QMP/Source
   qi_qmp_src_dir: ${{ github.workspace }}/QI-QMP/Source
