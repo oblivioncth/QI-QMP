@@ -7,10 +7,8 @@ on:
 env:
   ci_bot_username: ObyBotCI
   ci_bot_email: 104651589+ObyBotCI@users.noreply.github.com
-  qi_qmp_qtd_win_artifact_path: ${{ github.workspace }}/QI-QMPQtDWin
-  qi_qmp_qts_win_artifact_path: ${{ github.workspace }}/QI-QMPQtSWin
-  qi_qmp_qtd_linux_artifact_path: ${{ github.workspace }}/QI-QMPQtDLinux
-  qi_qmp_qts_linux_artifact_path: ${{ github.workspace }}/QI-QMPQtSLinux
+  artifacts_path: ${{ github.workspace }}/Artifacts
+  zips_path: ${{ github.workspace }}/Zips
   
 jobs:
   tag_master_and_sync_dev:
@@ -105,38 +103,19 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: windows-latest
     steps:
-    - name: Set release artifact names
-      run: |
-        echo "release_qtd_win_package_name=${{ needs.build_qi_qmp_release_windows.outputs.qt_shared_artifact_name }}" >> $Env:GITHUB_ENV
-        echo "release_qts_win_package_name=${{ needs.build_qi_qmp_release_windows.outputs.qt_static_artifact_name }}" >> $Env:GITHUB_ENV
-        echo "release_qtd_linux_package_name=${{ needs.build_qi_qmp_release_linux.outputs.qt_shared_artifact_name }}" >> $Env:GITHUB_ENV
-        echo "release_qts_linux_package_name=${{ needs.build_qi_qmp_release_linux.outputs.qt_static_artifact_name }}" >> $Env:GITHUB_ENV
-    - name: Download built shared QI-QMP artifact (Windows)
+    - name: Download built QI-QMP artifacts
       uses: actions/download-artifact@v3
       with:
-        name: ${{ env.release_qtd_win_package_name }}
-        path: ${{ env.qi_qmp_qtd_win_artifact_path }}
-    - name: Download built static QI-QMP artifact (Windows)
-      uses: actions/download-artifact@v3
-      with:
-        name: ${{ env.release_qts_win_package_name }}
-        path: ${{ env.qi_qmp_qts_win_artifact_path }}
-    - name: Download built shared QI-QMP artifact (Linux)
-      uses: actions/download-artifact@v3
-      with:
-        name: ${{ env.release_qtd_linux_package_name }}
-        path: ${{ env.qi_qmp_qtd_linux_artifact_path }}
-    - name: Download built static QI-QMP artifact (Linux)
-      uses: actions/download-artifact@v3
-      with:
-        name: ${{ env.release_qts_linux_package_name }}
-        path: ${{ env.qi_qmp_qts_linux_artifact_path }}
+        path: ${{ env.artifacts_path }}
     - name: Zip up release artifacts
       run: |
-        7z a "${{ env.release_qtd_win_package_name }}.zip" "${{ env.qi_qmp_qtd_win_artifact_path }}/*"
-        7z a "${{ env.release_qts_win_package_name }}.zip" "${{ env.qi_qmp_qts_win_artifact_path }}/*"
-        7z a "${{ env.release_qtd_linux_package_name }}.zip" "${{ env.qi_qmp_qtd_linux_artifact_path }}/*"
-        7z a "${{ env.release_qts_linux_package_name }}.zip" "${{ env.qi_qmp_qts_linux_artifact_path }}/*"
+        $artifact_folders = Get-ChildItem -Directory -Path "${{ env.artifacts_path }}"
+        foreach($art_dir in $artifact_folders)
+        {
+          $name = $art_dir.name
+          $path = $art_dir.fullname
+          7z a "${{ env.zips_path }}/${name}.zip" "${path}/*"
+        }
     - name: Generate release
       uses: softprops/action-gh-release@v1
       with:
@@ -145,9 +124,6 @@ jobs:
         fail_on_unmatched_files: true
         generate_release_notes: true
         files: |
-          ${{ env.release_qtd_win_package_name }}.zip
-          ${{ env.release_qts_win_package_name }}.zip
-          ${{ env.release_qtd_linux_package_name }}.zip
-          ${{ env.release_qts_linux_package_name }}.zip
+          ${{ env.zips_path }}/*.zip
     
         
