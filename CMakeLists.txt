@@ -1,7 +1,7 @@
 #================= Project Setup ==========================
 
 # CMake
-cmake_minimum_required(VERSION 3.25.0)
+cmake_minimum_required(VERSION 3.24.0)
 
 # Store minimum required version for later since it can be overwritten
 # by find_package/macro calls in dependencies (stupid)
@@ -113,7 +113,7 @@ find_qt6_package(REQUIRED COMPONENTS ${QT_FIND_COMPONENTS})
 # Fetch Qx (build and import from source)
 include(OB/FetchQx)
 fetch_qx(
-    REF "v0.4.3"
+    REF "4661b909d8c7d2df5a45aa7786ec7f458a733d48"
     COMPONENTS
         Core
 )
@@ -199,6 +199,11 @@ write_basic_package_version_file(
 #================ Build Documentation ======================
 
 if(QI_QMP_DOCS_TARGET)
+    # Requires higher CMake version
+    if("${CMAKE_VERSION}" VERSION_LESS "3.25.0")
+        message(FATAL_ERROR "CMake 3.25.0 or greater is required to build the ${PROJECT_NAME} documentation!")
+    endif()
+
     # Find Doxygen package
     find_package(Doxygen 1.9.4 REQUIRED
                  COMPONENTS dot
