@@ -168,9 +168,10 @@ target_sources(${TARGET_NAME} PRIVATE ${pathed_api_headers})
 # Link libraries to target
 target_link_libraries(${TARGET_NAME}
     PRIVATE
+        Qx::Core
+    PUBLIC
         Qt6::Core
         Qt6::Network
-        Qx::Core
 )
 #---------- Configure Target Properties------------------
 set_target_properties(${TARGET_NAME} PROPERTIES
