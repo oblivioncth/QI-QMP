@@ -75,7 +75,7 @@ ob_setup_verbose_versioning(PROJECT_VERSION_VERBOSE)
 #================= Build =========================
 
 # Qt package components
-set(QT_COMPONENTS
+set(QI_QMP_QT_COMPONENTS
     Core
     Network
 )
@@ -85,7 +85,7 @@ add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # Find Qt package
 include(OB/BetterFindQt6)
-ob_find_qt6_package(REQUIRED COMPONENTS ${QT_COMPONENTS})
+ob_find_qt6_package(REQUIRED COMPONENTS ${QI_QMP_QT_COMPONENTS})
 
 # Fetch Qx (build and import from source)
 include(OB/FetchQx)
