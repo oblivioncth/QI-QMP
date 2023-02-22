@@ -59,7 +59,7 @@ jobs:
         echo "Setup C++ Build Environment..."
         CALL "${{ env.vs_dir }}\Common7\Tools\VsDevCmd.bat" -arch=amd64
         echo "Configure CMake using Qt wrapper..."
-        CALL "${{ env.qt_cmake }}" -G "${{ env.cmake_gen }}" -S "${{ env.qi_qmp_src_dir}}" -B "${{ env.qi_qmp_build_dir }}" -D QI_QMP_DOCS_TARGET=ON"
+        CALL "${{ env.qt_cmake }}" -G "${{ env.cmake_gen }}" -S "${{ env.qi_qmp_src_dir}}" -B "${{ env.qi_qmp_build_dir }}" -D QI_QMP_DOCS=ON"
         echo "Changing to build directory..."
         cd "%qi_qmp_build_dir%"
         echo "Building QI-QMP debug..."

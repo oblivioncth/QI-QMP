@@ -97,23 +97,22 @@ The CMake project is designed to be used with multi-configuration generators suc
 
 #### CMake Targets:
 
- - `all` - Effectively an alias for the `qi_qmp` target
+ - `all` - Effectively an alias for the `@LIB_TARGET_NAME@` target
  - `install` - Installs the build output into `CMAKE_INSTALL_PREFIX`
- - `qi_qmp_docs` - Builds the QI-QMP documentation
- - `qi_qmp_qmpi` - Builds the projects sole library
+ - `@DOC_TARGET_NAME@` - Builds the QI-QMP documentation
+ - `@LIB_TARGET_NAME@` - Builds the projects sole library
 
 #### CMake Install Components:
-- `all` - Effectively an alias for the `qi_qmp` component
-- `qi_qmp` - Installs top-level files (README.md, CMake package configuration files, etc.) 
-- `qi_qmp_docs` - Installs documentation
-- `qi_qmp_qmpi` - Installs the built library
+- `@PROJECT_NAME_LC@` - Installs top-level files (README.md, CMake package configuration files, etc.)
+- `@DOC_TARGET_NAME@` - Installs documentation
+- `@LIB_TARGET_NAME@` - Installs the built library
 
-If QI-QMP is configured as a sub-project, its install components are automatically removed from the `all` component, as to not pollute the install directory of the top-level project.
+If QI-QMP is configured as a sub-project, its install components are automatically removed from the default install component, as to not pollute the install directory of the top-level project.
 
 #### Documentation:
-In order for the `qi_qmp_docs` target to be generated the CMake cache variable **QI_QMP_DOCS_TARGET** must be set to *ON* when CMake is invoked:
+In order for the `@DOC_TARGET_NAME@` target to be generated the CMake cache variable **QI_QMP_DOCS** must be set to *ON* when CMake is invoked:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-cmake.exe (...) -D QI_QMP_DOCS_TARGET=ON
+cmake.exe (...) -D QI_QMP_DOCS=ON
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The QI_QMP documentation supports two optional, but highly recommended features:
@@ -169,7 +168,7 @@ The following is the general build process required to successfully generate thi
 CALL "%VS_PATH%\Common7\Tools\VsDevCmd.bat" -arch=amd64
 
 # Configure CMake using Qt wrapper
-CALL "%Qt_ROOT%\bin\qt-cmake" -G "Ninja Multi-Config" -S "%QI_QMP_SOURCE_DIR%" -B "%QI_QMP_BUILD_DIR%" -D QI_QMP_DOCS_TARGET=ON
+CALL "%Qt_ROOT%\bin\qt-cmake" -G "Ninja Multi-Config" -S "%QI_QMP_SOURCE_DIR%" -B "%QI_QMP_BUILD_DIR%" -D QI_QMP_DOCS=ON
 
 # Go to Build directory
 cd /D "%QI_QMP_BUILD_DIR%"
