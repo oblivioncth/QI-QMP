@@ -47,7 +47,7 @@ set(DOC_IMAGE_LIST
 
 # Determine Qt related doc paths
 include(OB/QtDocsHelper)
-configure_qt_doc_link(${Qt6_PREFIX_PATH})
+ob_configure_qt_doc_link(${Qt6_PREFIX_PATH})
 
 #--------------------Setup Doxygen-------------------
 

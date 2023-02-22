@@ -35,7 +35,7 @@ list(APPEND CMAKE_MODULE_PATH "${PROJ_SCRIPTS_PATH}/module")
 
 # Get helper scripts
 include(QI-QMP/FetchOBCMake)
-fetch_ob_cmake("37d76bfe1cc1edc1d762a9673d47ef17615d2be3")
+fetch_ob_cmake("8e20cc55aefba251d3436b6e16db71caadd0393e")
 
 # Include utility functions
 include(OB/Utility)
@@ -45,7 +45,7 @@ get_system_architecture(TARGET_ARCH)
 
 #--------------Top Level Project Setup-------------
 include(OB/ProjectSetup)
-top_level_project_setup()
+ob_top_level_project_setup()
 
 #--------------------Setup Paths-------------------
 
@@ -70,7 +70,7 @@ set(PACKAGE_PREFIX "${CMAKE_CURRENT_BINARY_DIR}/out/dist")
 
 # Versioning
 include(OB/VerboseVersioning)
-setup_verbose_versioning(PROJECT_VERSION_VERBOSE)
+ob_setup_verbose_versioning(PROJECT_VERSION_VERBOSE)
 
 #================= Build =========================
 
@@ -85,12 +85,12 @@ add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 # Find Qt package
 include(OB/BetterFindQt6)
-find_qt6_package(REQUIRED COMPONENTS ${QT_COMPONENTS})
+ob_find_qt6_package(REQUIRED COMPONENTS ${QT_COMPONENTS})
 
 # Fetch Qx (build and import from source)
 include(OB/FetchQx)
-fetch_qx(
-    REF "4661b909d8c7d2df5a45aa7786ec7f458a733d48"
+ob_fetch_qx(
+    REF "504b1c29e67523fcc8077f3000c73686c0401450"
     COMPONENTS
         Core
 )
