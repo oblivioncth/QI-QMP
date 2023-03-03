@@ -100,7 +100,7 @@ The CMake project is designed to be used with multi-configuration generators suc
  - `all` - Effectively an alias for the `@LIB_TARGET_NAME@` target
  - `install` - Installs the build output into `CMAKE_INSTALL_PREFIX`
  - `@DOC_TARGET_NAME@` - Builds the QI-QMP documentation
- - `@LIB_TARGET_NAME@` - Builds the projects sole library
+ - `@LIB_TARGET_NAME@` - Builds the project's sole library
 
 #### CMake Install Components:
 - `@PROJECT_NAME_LC@` - Installs top-level files (README.md, CMake package configuration files, etc.)

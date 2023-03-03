@@ -13,11 +13,15 @@ project(QI-QMP
 
 # Get helper scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FetchOBCMake.cmake)
-fetch_ob_cmake("50930b8f6875795d5f981789ed4cf988933465d9")
+fetch_ob_cmake("8dae45fc91780b975990a8d27928c37661a2e904")
 
 # Initialize project according to standard rules
 include(OB/Project)
 ob_standard_project_setup()
+
+# Standard setup overrides
+set(PROJECT_NAMESPACE_LC "qi_qmp")
+set(PROJECT_NAMESPACE_UC "QI_QMP")
 
 # Configuration options
 option(QI_QMP_DOCS "Build QI-QMP documentation" OFF)
@@ -54,7 +58,7 @@ ob_fetch_qx(
 )
 
 # Process Targets
-set(LIB_TARGET_NAME ${PROJECT_NAME_LC}_qmpi)
+set(LIB_TARGET_NAME ${PROJECT_NAMESPACE_LC}_qmpi)
 set(LIB_ALIAS_NAME Qmpi)
 set(LIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/lib")
 add_subdirectory("${LIB_PATH}")
@@ -65,7 +69,7 @@ if(QI_QMP_DOCS)
         message(FATAL_ERROR "CMake 3.25.0 or greater is required to build the ${PROJECT_NAME} documentation!")
     endif()
 
-    set(DOC_TARGET_NAME ${PROJECT_NAME_LC}_docs)
+    set(DOC_TARGET_NAME ${PROJECT_NAMESPACE_LC}_docs)
     add_subdirectory(doc)
 endif()
 

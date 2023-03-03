@@ -1,14 +1,11 @@
-# Library setup
-set(header_common_path "qi-qmp")
-
 # Add via ob standard library
 include(OB/Library)
 ob_add_standard_library(${LIB_TARGET_NAME}
     NAMESPACE "${PROJECT_NAMESPACE}"
     ALIAS "${LIB_ALIAS_NAME}"
-    EXPORT_HEADER "${header_common_path}/qmpi_export.h"
+    EXPORT_HEADER "${PROJECT_NAME_LC}/qmpi_export.h"
     HEADERS_API
-        COMMON "${header_common_path}"
+        COMMON "${PROJECT_NAME_LC}"
         FILES
             "qmpi.h"
     IMPLEMENTATION
