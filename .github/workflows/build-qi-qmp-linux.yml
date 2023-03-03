@@ -15,12 +15,38 @@ jobs:
   build-qi-qmp:
     name: Build QI-QMP - Linux (Debug/Release)
     strategy:
+      fail-fast: false
       matrix:
-        qt_linkage: [shared, static]
-    runs-on: ubuntu-20.04
+        os: [ubuntu-20.04, ubuntu-22.04]
+        compiler: [gcc, clang]
+        lib_linkage: [shared, static]
+        include:
+          - os: ubuntu-20.04
+            compiler: gcc
+            c_comp: gcc-10
+            cxx_comp: g++-10
+            qt_comp: clang12
+          - os: ubuntu-20.04
+            compiler: clang
+            c_comp: clang-12
+            cxx_comp: clang++-12
+            qt_comp: clang12            
+          - os: ubuntu-22.04
+            compiler: gcc
+            c_comp: gcc-12
+            cxx_comp: g++-12
+            qt_comp: clang14
+          - os: ubuntu-22.04
+            compiler: clang
+            c_comp: clang-14
+            cxx_comp: clang++-14
+            qt_comp: clang14
+          - lib_linkage: shared
+            cmake_bsl: ON
+          - lib_linkage: static
+            cmake_bsl: OFF   
+    runs-on: ${{ matrix.os }}
     env:
-      c_comp: clang-12
-      cxx_comp: clang++-12
       cmake_gen: Ninja Multi-Config
     steps:
     - name: Set derived variables with shell because GitHub Actions env context sucks
@@ -34,8 +60,8 @@ jobs:
       with:
         version: 6.4.2
         os: linux
-        compiler: clang12
-        linkage: ${{ matrix.qt_linkage }}
+        compiler: ${{ matrix.qt_comp }}
+        linkage: ${{ matrix.lib_linkage }}
         path: ${{ env.qt_install_dir }}
         credentials: ${{ secrets.qt_ffynnon_cred }}
     - name: Install OpenGL lib
@@ -52,6 +78,9 @@ jobs:
       run: sudo apt-get install ninja-build
     - name: Install Harfbuzz
       run: sudo apt-get install libharfbuzz-dev
+    - name: Install EGL [22.04]
+      if: matrix.os == 'ubuntu-22.04'
+      run: sudo apt-get install libegl1-mesa-dev
     - name: Checkout QI-QMP
       uses: actions/checkout@v3
       with:
@@ -61,19 +90,17 @@ jobs:
       working-directory: ${{ env.qi_qmp_src_dir }}
       run: |
         echo Configuring CMake...
-        "$qt_cmake" -G "$cmake_gen" -S "$qi_qmp_src_dir" -B "$qi_qmp_build_dir" -D QI_QMP_DOCS=ON -D CMAKE_CXX_COMPILER="$cxx_comp" -D CMAKE_C_COMPILER="$c_comp"
+        "$qt_cmake" -G "$cmake_gen" -S "$qi_qmp_src_dir" -B "$qi_qmp_build_dir" -D QI_QMP_DOCS=ON -D BUILD_SHARED_LIBS="${{ matrix.cmake_bsl }}" -D CMAKE_CXX_COMPILER="${{ matrix.cxx_comp }}" -D CMAKE_C_COMPILER="${{ matrix.c_comp }}"
         echo Changing to build directory...
         cd "$qi_qmp_build_dir"
-        echo Building QI-QMP debug...
+        echo Building QI-QMP Debug...
         cmake --build . --target all --config Debug
-        echo Building QI-QMP release...
+        echo Building QI-QMP Release/Docs...
         cmake --build . --target all --config Release
-        echo Building QI-QMP docs...
-        cmake --build . --target qi_qmp_docs --config Release
         echo Installing QI-QMP Debug
-        cmake --build . --target install --config Debug
+        cmake --install . --config Debug
         echo Installing QI-QMP Release/Docs...
-        cmake --build . --target install --config Release
+        cmake --install . --config Release
         echo Packaging QI-QMP...
         cpack -C "Debug;Release"
         echo Build complete.
@@ -81,7 +108,7 @@ jobs:
       id: get_artifact_name
       run: |
         cpack_name=$(find "${{ env.qi_qmp_package_path }}" -type f -name "*.zip")
-        artifact_name=$(basename "$cpack_name" .zip)
+        artifact_name="$(basename "$cpack_name" .zip) [${{ matrix.cxx_comp }}]"
         echo "current_artifact_name=$artifact_name" >> $GITHUB_ENV
     - name: Upload QI-QMP build artifact
       uses: actions/upload-artifact@v3
