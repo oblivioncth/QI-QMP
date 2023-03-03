@@ -1,6 +1,9 @@
 #ifndef QMPI_H
 #define QMPI_H
 
+// Shared Lib Support
+#include "qi-qmp/qmpi_export.h"
+
 // Standard Library Includes
 #include <any>
 #include <queue>
@@ -13,7 +16,7 @@
 #include <QJsonArray>
 #include <QTimer>
 
-class Qmpi : public QObject
+class QI_QMP_QMPI_EXPORT Qmpi : public QObject
 {
     Q_OBJECT
 //-Class Enums--------------------------------------------------------------------------------------------------------------
