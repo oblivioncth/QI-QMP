@@ -13,7 +13,7 @@ project(QI-QMP
 
 # Get helper scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FetchOBCMake.cmake)
-fetch_ob_cmake("8dae45fc91780b975990a8d27928c37661a2e904")
+fetch_ob_cmake("a98538b14c951fc8c8acc236c35c2cfa3be1821d")
 
 # Initialize project according to standard rules
 include(OB/Project)

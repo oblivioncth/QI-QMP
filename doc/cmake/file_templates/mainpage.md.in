@@ -97,13 +97,13 @@ The CMake project is designed to be used with multi-configuration generators suc
 
 #### CMake Targets:
 
- - `all` - Effectively an alias for the `@LIB_TARGET_NAME@` target
+ - `all` - Effectively an alias for the `@LIB_TARGET_NAME@` target, also builds documentation if enabled
  - `install` - Installs the build output into `CMAKE_INSTALL_PREFIX`
  - `@DOC_TARGET_NAME@` - Builds the QI-QMP documentation
  - `@LIB_TARGET_NAME@` - Builds the project's sole library
 
 #### CMake Install Components:
-- `@PROJECT_NAME_LC@` - Installs top-level files (README.md, CMake package configuration files, etc.)
+- `@PROJECT_NAMESPACE_LC@` - Installs top-level files (README.md, CMake package configuration files, etc.)
 - `@DOC_TARGET_NAME@` - Installs documentation
 - `@LIB_TARGET_NAME@` - Installs the built library
 
@@ -173,12 +173,9 @@ CALL "%Qt_ROOT%\bin\qt-cmake" -G "Ninja Multi-Config" -S "%QI_QMP_SOURCE_DIR%" -
 # Go to Build directory
 cd /D "%QI_QMP_BUILD_DIR%"
 
-# Build the Debug/Release libraries
+# Build the Debug/Release libraries and documentation
 cmake.exe --build . --target all --config Debug
 cmake.exe --build . --target all --config Release
-
-# Build the documentation
-cmake --build . --target qi_qmp_docs --config Release
 
 # Install Debug/Release libraries and documentation
 cmake --build . --target install --config Debug
