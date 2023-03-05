@@ -17,7 +17,7 @@ env:
 
 jobs:
   build-qi-qmp:
-    name: Build QI-QMP - Windows (Debug/Release)
+    name: Build QI-QMP - Windows (Release)
     strategy:
       fail-fast: false
       matrix:
@@ -68,16 +68,12 @@ jobs:
         CALL "${{ env.qt_cmake }}" -G "${{ env.cmake_gen }}" -S "${{ env.qi_qmp_src_dir}}" -B "${{ env.qi_qmp_build_dir }}" -D QI_QMP_DOCS=ON -D BUILD_SHARED_LIBS=${{ matrix.cmake_bsl }}
         echo "Changing to build directory..."
         cd "%qi_qmp_build_dir%"
-        echo "Building QI-QMP Debug..."
-        cmake --build . --target all --config Debug
         echo "Building QI-QMP Release/Docs..."
         cmake --build . --target all --config Release
-        echo "Installing QI-QMP Debug"
-        cmake --install . --config Debug
         echo "Installing QI-QMP Release/Docs..."
         cmake --install . --config Release
         echo "Packaging QI-QMP..."
-        cpack -C "Debug;Release"
+        cpack -C "Release"
         echo "Build complete."
     - name: Get QI-QMP artifact name
       run: |
