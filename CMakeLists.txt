@@ -92,7 +92,4 @@ ob_standard_project_misc_install()
 #====================== Package ==============================
 
 include(OB/Packaging)
-ob_standard_project_package(
-    VENDOR "oblivioncth"
-    SUFFIX "_(Qt${Qt6_VERSION})"
-)
+ob_standard_project_package(VENDOR "oblivioncth")
