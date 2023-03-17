@@ -13,7 +13,7 @@ project(QI-QMP
 
 # Get helper scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FetchOBCMake.cmake)
-fetch_ob_cmake("202d606507f26a95c10d15ea170c7aed9e5c5341")
+fetch_ob_cmake("v0.3")
 
 # Initialize project according to standard rules
 include(OB/Project)
@@ -53,7 +53,7 @@ set(QI_QMP_QX_COMPONENTS
 
 include(OB/FetchQx)
 ob_fetch_qx(
-    REF "b410955e5831ba6e05c8e0e176250a9eb91f658f"
+    REF "v0.5"
     COMPONENTS
         ${QI_QMP_QX_COMPONENTS}
 )
