@@ -3,7 +3,8 @@ include(OB/Library)
 ob_add_standard_library(${LIB_TARGET_NAME}
     NAMESPACE "${PROJECT_NAMESPACE}"
     ALIAS "${LIB_ALIAS_NAME}"
-    EXPORT_HEADER "${PROJECT_NAME_LC}/qmpi_export.h"
+    EXPORT_HEADER
+        PATH "${PROJECT_NAME_LC}/qmpi_export.h"
     HEADERS_API
         COMMON "${PROJECT_NAME_LC}"
         FILES

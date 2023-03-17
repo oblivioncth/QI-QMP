@@ -13,7 +13,7 @@ project(QI-QMP
 
 # Get helper scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FetchOBCMake.cmake)
-fetch_ob_cmake("990d4c4a3987722a173f948b59fd45ce924a7d9c")
+fetch_ob_cmake("202d606507f26a95c10d15ea170c7aed9e5c5341")
 
 # Initialize project according to standard rules
 include(OB/Project)
@@ -52,7 +52,7 @@ set(QI_QMP_QX_COMPONENTS
 
 include(OB/FetchQx)
 ob_fetch_qx(
-    REF "992f9171deea65aaecf30af6de94d3dddfdd9a71"
+    REF "b410955e5831ba6e05c8e0e176250a9eb91f658f"
     COMPONENTS
         ${QI_QMP_QX_COMPONENTS}
 )
@@ -74,7 +74,7 @@ ob_standard_project_package_config(
     COMPATIBILITY "SameMinorVersion"
     CONFIG STANDARD
         TARGET_CONFIGS
-            "${PROJECT_NAMESPACE}::${LIB_ALIAS_NAME}"
+            TARGET "${PROJECT_NAMESPACE}::${LIB_ALIAS_NAME}" COMPONENT "${LIB_ALIAS_NAME}" DEFAULT
         DEPENDS
             PACKAGE "Qt6" COMPONENTS ${QI_QMP_QT_COMPONENTS}
             PACKAGE "Qx" VERSION ${Qx_VERSION} COMPONENTS ${QI_QMP_QX_COMPONENTS}
