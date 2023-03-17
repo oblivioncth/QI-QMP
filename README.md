@@ -22,15 +22,17 @@ Finally, the [Minimal Example](https://oblivioncth.github.io/QI-QMP/index.html#a
 ### Summary
 
  - C++20
- - CMake 3.24.0
+ - CMake 3.23.0
 
 ### Dependencies
 - Qt6
 - [Qx](https://github.com/oblivioncth/Qx/)
+- [OBCMake](https://github.com/oblivioncth/OBCmake) (build script support, fetched automatically)
+- [Doxygen](https://www.doxygen.nl/)  (for documentation)
 
 ## Pre-built Releases/Artifacts
 
-Releases and some workflows currently provide builds of libfp in various combinations of platforms and compilers. View the repository [Actions](https://github.com/oblivioncth/libfp/actions) or [Releases](https://github.com/oblivioncth/libfp/releases) to see examples.
+Releases and some workflows currently provide builds of QI-QMP in various combinations of platforms and compilers. View the repository [Actions](https://github.com/oblivioncth/QI-QMP/actions) or [Releases](https://github.com/oblivioncth/QI-QMP/releases) to see examples.
 
 For all builds, Qt was configured as follows (excluding defaults):
 
@@ -42,4 +44,3 @@ For all builds, Qt was configured as follows (excluding defaults):
  - Modules: qtbase, qtimageformats, qtnetworkauth, qtsvg, qt5compat
  - Features: relocatable
  - -ssl (Linux) / -schannel (Windows)
-
