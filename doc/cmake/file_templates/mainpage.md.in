@@ -14,16 +14,28 @@ Requirements
  - An x64, C++@CMAKE_CXX_STANDARD@ capable compiler
  - Qt6
  - CMake @PROJECT_CMAKE_MINIMUM_REQUIRED_VERSION@ or greater
- - Windows 10/11 or Linux (only tested on Ubuntu)
+ - OS
+	 - Windows 10 or above
+	 - Linux (untested on more general Unix systems)
 
 Packaging
 ----------
-QI-QMP is provided as a CMake package composed of a single static library and accompanying public header file.
+QI-QMP is provided as a CMake package composed of a single library and accompanying public header file.
+
+#### Package Components:
+
+ - `Qmpi` - The main library
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Example QI-QMP Import
 find_package(QI-QMP)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If no components are specified in the `find_package()` call, only the library will be imported.
+
+QI-QMP is also composed to gracefully support CMake's FetchContent mechanism. All exportable targets are named to match their corresponding component when packaged, and feature alias targets with the same names when building. This allows consumers to access the targets via the same name regardless of whether they are using a pre-built package of QI-QMP or building it as a sub-project.
+
+For example, the `Qmpi` component corresponds to the `qi_qmp_qmpi` target, which can also be referred to via `QI-QMP::Qmpi`.
 
 Getting Started
 ---------------
@@ -95,22 +107,28 @@ If newer to working with Qt, it is easiest to build from within Qt creator as it
 
 The CMake project is designed to be used with multi-configuration generators such as Visual Studio or Ninja Multi-Config (recommended), and may require some tweaking to work with single configuration generators.
 
+#### CMake Options:
+
+ - `QI_QMP_DOCS` - Set to `ON` in order to generate the documentation target (OFF)
+ - `BUILD_SHARED_LIBS` - Build QI-QMP as a shared library instead of a static one (OFF)
+
 #### CMake Targets:
 
- - `all` - Effectively an alias for the `@LIB_TARGET_NAME@` target, also builds documentation if enabled
+ - `all` - Effectively an alias for the `qi_qmp_qmpi` target, also builds documentation if enabled
  - `install` - Installs the build output into `CMAKE_INSTALL_PREFIX`
- - `@DOC_TARGET_NAME@` - Builds the QI-QMP documentation
- - `@LIB_TARGET_NAME@` - Builds the project's sole library
+ - `qi_qmp_docs` - Builds the QI-QMP documentation
+ - `qi_qmp_qmpi` - Builds the project's sole library
 
 #### CMake Install Components:
-- `@PROJECT_NAMESPACE_LC@` - Installs top-level files (README.md, CMake package configuration files, etc.)
-- `@DOC_TARGET_NAME@` - Installs documentation
-- `@LIB_TARGET_NAME@` - Installs the built library
 
-If QI-QMP is configured as a sub-project, its install components are automatically removed from the default install component, as to not pollute the install directory of the top-level project.
+- `qi_qmp` - Installs top-level files (README.md, CMake package configuration files, etc.)
+- `qi_qmp_docs` - Installs documentation
+- `qi_qmp_qmpi` - Installs the built library
+
+If QI-QMP is configured as a sub-project, its install components are automatically removed from the default install component, as to not pollute the install directory of the top-level project. They can still be installed by directly referencing their component names as shown above.
 
 #### Documentation:
-In order for the `@DOC_TARGET_NAME@` target to be generated the CMake cache variable **QI_QMP_DOCS** must be set to *ON* when CMake is invoked:
+In order for the `qi_qmp_docs` target to be generated the CMake cache variable **QI_QMP_DOCS** must be set to *ON* when CMake is invoked:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cmake.exe (...) -D QI_QMP_DOCS=ON
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -157,9 +175,9 @@ The path for this documentation varies depending on how you obtained Qt, but is 
     # On Linux it is often /usr/local/Qt
 
 #### Package
-By default, the CMakeLists project configures CPack to create an artifact ZIP containing the binaries for Debug and Release configurations, as well as documentation.
+By default, the CMakeLists project configures CPack to create an artifact ZIP containing the binaries/archives for the library configurations, as well as documentation.
 
-The following is the general build process required to successfully generate this package via a shadow build on Windows:
+The following is the general build process required to successfully generate this package via a shadow build on Windows. Adjust the configuration as you see fit::
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Set the environment variables that follow as desired
@@ -178,8 +196,8 @@ cmake.exe --build . --target all --config Debug
 cmake.exe --build . --target all --config Release
 
 # Install Debug/Release libraries and documentation
-cmake --build . --target install --config Debug
-cmake --build . --target install --config Release
+cmake --install . --config Debug
+cmake --install . --config Release
 
 # Create the output package
 cpack.exe -C Debug;Release
@@ -223,4 +241,4 @@ target_link_libraries(SomeExe
 )
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This approach will avoid concerns of ensuring compatibility between Qt configurations for your project and QI-QMP, since both will be built with the same copy of Qt.
+This allows for more flexibility in downstream projects as they can more easily alter the configuration of libsquish on-the-fly as needed.
