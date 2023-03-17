@@ -25,6 +25,7 @@ set(PROJECT_NAMESPACE_UC "QI_QMP")
 
 # Configuration options
 option(QI_QMP_DOCS "Build QI-QMP documentation" OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries." OFF) # Redundant due to OB, but explicit
 
 # C++
 set(CMAKE_CXX_STANDARD 20)
