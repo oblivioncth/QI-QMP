@@ -422,7 +422,7 @@ void Qmpi::processServerMessage(const QJsonObject& jMsg)
             // Check for each response type
             if(jMsg.contains(Json::SuccessResponse::IDENTIFIER_KEY))
             {
-                if(!processReturnMessage(jMsg))
+                if(!processSuccessMessage(jMsg))
                     return;
 
                 // Send next command
@@ -460,12 +460,12 @@ bool Qmpi::processGreetingMessage(const QJsonObject& jGreeting)
     return true;
 }
 
-bool Qmpi::processReturnMessage(const QJsonObject& jReturn)
+bool Qmpi::processSuccessMessage(const QJsonObject& jSuccess)
 {
     Q_ASSERT(!mExecutionQueue.empty());
 
     // Get value
-    QJsonValue value = jReturn[Json::ErrorResponse::IDENTIFIER_KEY];
+    QJsonValue value = jSuccess[Json::SuccessResponse::IDENTIFIER_KEY];
     std::any context = mExecutionQueue.front().context;
     mExecutionQueue.pop();
     emit responseReceived(value, context);

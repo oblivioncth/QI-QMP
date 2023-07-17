@@ -77,7 +77,7 @@ private:
     // Message Processing
     void processServerMessage(const QJsonObject& jMsg);
     bool processGreetingMessage(const QJsonObject& jGreeting);
-    bool processReturnMessage(const QJsonObject& jReturn);
+    bool processSuccessMessage(const QJsonObject& jSuccess);
     bool processErrorMessage(const QJsonObject& jError);
     bool processEventMessage(const QJsonObject& jEvent);
 
