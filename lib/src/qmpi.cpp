@@ -366,7 +366,10 @@ void Qmpi::propagate()
         startTransactionTimer();
     }
     else
+    {
+        emit commandQueueExhausted();
         changeState(State::Idle);
+    }
 }
 
 void Qmpi::processServerMessage(const QJsonObject& jMsg)
@@ -931,4 +934,13 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *  This signal is emitted when the interface's state changes, with @a state containing the new state.
  *
  *  @sa connected(), disconnected(), readyForCommands() and finished().
+ */
+
+/*!
+ *  @fn void Qmpi::commandQueueExhausted()
+ *
+ *  This signal is emitted when the interface's command queue becomes empty and the response to the last command
+ *  in the queue has been received, just before it enters State::Idle.
+ *
+ *  @sa stateChanged(), and execute().
  */

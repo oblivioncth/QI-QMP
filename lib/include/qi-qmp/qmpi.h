@@ -123,6 +123,7 @@ signals:
     void communicationErrorOccurred(Qmpi::CommunicationError error); // Will disconnect after
     void errorResponseReceived(QString errorClass, QString description, std::any context); // Will not disconnect after
     void stateChanged(Qmpi::State state);
+    void commandQueueExhausted();
 };
 
 #endif // QMPI_H
