@@ -337,7 +337,7 @@ bool Qmpi::sendCommand(QString command, QJsonObject args)
         // Check for error
         if(bytesWritten == -1)
         {
-            raiseCommunicationError(CommunicationError::ReadFailed);
+            raiseCommunicationError(CommunicationError::WriteFailed);
             return false;
         }
 
