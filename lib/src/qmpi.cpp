@@ -25,7 +25,7 @@ struct Greeting
 
 struct SuccessResponse
 {
-    static inline const QString IDENTIFIER_KEY = QSL("return");
+    static inline const QString IDENTIFIER_KEY =u"return"_s;
 };
 
 struct ErrorBody
@@ -41,7 +41,7 @@ struct ErrorBody
 
 struct ErrorResponse
 {
-    static inline const QString IDENTIFIER_KEY = QSL("error");
+    static inline const QString IDENTIFIER_KEY =u"error"_s;
 
     ErrorBody error;
 
@@ -58,7 +58,7 @@ struct Timestamp
 
 struct AsyncEvent
 {
-    static inline const QString IDENTIFIER_KEY = QSL("event");
+    static inline const QString IDENTIFIER_KEY =u"event"_s;
 
     QString event;
     QJsonObject data;
@@ -70,11 +70,11 @@ struct AsyncEvent
 // TODO: Use QX_JSON for serializing these after the serialization portion of QX_JSON is implemented
 struct Execute
 {
-    static inline const QString IDENTIFIER_KEY = QSL("execute");
-    static inline const QString ARGUMENTS = QSL("arguments");
+    static inline const QString IDENTIFIER_KEY =u"execute"_s;
+    static inline const QString ARGUMENTS =u"arguments"_s;
 };
 
-static inline const QString NEGOTIATION_COMMAND = QSL("qmp_capabilities");
+static inline const QString NEGOTIATION_COMMAND =u"qmp_capabilities"_s;
 }
 /*! @endcond */
 
