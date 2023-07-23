@@ -53,7 +53,7 @@ set(QI_QMP_QX_COMPONENTS
 
 include(OB/FetchQx)
 ob_fetch_qx(
-    REF "520cc55d4a38aeb98c945b5c0c1c6eb70459af35"
+    REF "a6f65d5ea4cf49c7be64d2c4ea2b53a41171730f"
     COMPONENTS
         ${QI_QMP_QX_COMPONENTS}
 )
