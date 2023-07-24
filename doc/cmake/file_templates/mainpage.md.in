@@ -1,5 +1,5 @@
 QI-QMP {#mainpage}
-==============
+==================
 QI-QMP is a minuscule C++ library, which utilizes Qt, that provides an interface to QEMU instances via the [QEMU Machine Protocol](https://wiki.qemu.org/Documentation/QMP). In other words, this library implements the client side of QMP for C++.
 
 The interface takes the form of the library's sole class, `Qmpi`.
@@ -22,7 +22,7 @@ Packaging
 ----------
 QI-QMP is provided as a CMake package composed of a single library and accompanying public header file.
 
-#### Package Components:
+### Package Components:
 
  - `Qmpi` - The main library
 
@@ -95,6 +95,9 @@ QObject::connect(&iQemu, &Qmpi::responseReceived, [](QJsonValue data, std::any c
 QObject::connect(&iQemu, &Qmpi::errorResponseReceived, [](QString errorClass, QString desc, std::any context){
 	qDebug() << "Command " << std::any_cast<QString>(context) << " threw the error: [" << errorClass << "] " << desc;
 });
+
+iQemu.connectToHost();
+...
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Building From Source
@@ -107,19 +110,19 @@ If newer to working with Qt, it is easiest to build from within Qt creator as it
 
 The CMake project is designed to be used with multi-configuration generators such as Visual Studio or Ninja Multi-Config (recommended), and may require some tweaking to work with single configuration generators.
 
-#### CMake Options:
+### CMake Options:
 
  - `QI_QMP_DOCS` - Set to `ON` in order to generate the documentation target (OFF)
  - `BUILD_SHARED_LIBS` - Build QI-QMP as a shared library instead of a static one (OFF)
 
-#### CMake Targets:
+### CMake Targets:
 
  - `all` - Effectively an alias for the `qi_qmp_qmpi` target, also builds documentation if enabled
  - `install` - Installs the build output into `CMAKE_INSTALL_PREFIX`
  - `qi_qmp_docs` - Builds the QI-QMP documentation
  - `qi_qmp_qmpi` - Builds the project's sole library
 
-#### CMake Install Components:
+### CMake Install Components:
 
 - `qi_qmp` - Installs top-level files (README.md, CMake package configuration files, etc.)
 - `qi_qmp_docs` - Installs documentation
@@ -127,7 +130,7 @@ The CMake project is designed to be used with multi-configuration generators suc
 
 If QI-QMP is configured as a sub-project, its install components are automatically removed from the default install component, as to not pollute the install directory of the top-level project. They can still be installed by directly referencing their component names as shown above.
 
-#### Documentation:
+### Documentation:
 In order for the `qi_qmp_docs` target to be generated the CMake cache variable **QI_QMP_DOCS** must be set to *ON* when CMake is invoked:
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 cmake.exe (...) -D QI_QMP_DOCS=ON
@@ -174,7 +177,7 @@ The path for this documentation varies depending on how you obtained Qt, but is 
     # By default on Windows <QT_SOFTWARE> is C:\Program Files\Qt
     # On Linux it is often /usr/local/Qt
 
-#### Package
+### Package
 By default, the CMakeLists project configures CPack to create an artifact ZIP containing the binaries/archives for the library configurations, as well as documentation.
 
 The following is the general build process required to successfully generate this package via a shadow build on Windows. Adjust the configuration as you see fit::

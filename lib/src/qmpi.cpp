@@ -3,7 +3,80 @@
 
 // Qx Includes
 #include <qx/core/qx-json.h>
-#include <qx/core/qx-setonce.h>
+
+/*! @cond */
+namespace Json
+{
+
+struct GreetingBody
+{
+    QJsonObject version;
+    QJsonArray capabilities;
+
+    QX_JSON_STRUCT(version, capabilities);
+};
+
+struct Greeting
+{
+    GreetingBody QMP;
+
+    QX_JSON_STRUCT(QMP);
+};
+
+struct SuccessResponse
+{
+    static inline const QString IDENTIFIER_KEY =u"return"_s;
+};
+
+struct ErrorBody
+{
+    QString eClass;
+    QString desc;
+
+    QX_JSON_STRUCT_X(
+        QX_JSON_MEMBER_ALIASED(eClass, "class"),
+        QX_JSON_MEMBER(desc)
+    );
+};
+
+struct ErrorResponse
+{
+    static inline const QString IDENTIFIER_KEY =u"error"_s;
+
+    ErrorBody error;
+
+    QX_JSON_STRUCT(error);
+};
+
+struct Timestamp
+{
+    double seconds;
+    double microseconds;
+
+    QX_JSON_STRUCT(seconds, microseconds);
+};
+
+struct AsyncEvent
+{
+    static inline const QString IDENTIFIER_KEY =u"event"_s;
+
+    QString event;
+    QJsonObject data;
+    Timestamp timestamp;
+
+    QX_JSON_STRUCT(event, data, timestamp);
+};
+
+// TODO: Use QX_JSON for serializing these after the serialization portion of QX_JSON is implemented
+struct Execute
+{
+    static inline const QString IDENTIFIER_KEY =u"execute"_s;
+    static inline const QString ARGUMENTS =u"arguments"_s;
+};
+
+static inline const QString NEGOTIATION_COMMAND =u"qmp_capabilities"_s;
+}
+/*! @endcond */
 
 //===============================================================================================================
 // Qmpi
@@ -122,8 +195,8 @@
  */
 Qmpi::Qmpi(QObject* parent) :
     QObject(parent),
-    mPort(4444),
     mHostId(QHostAddress::LocalHost),
+    mPort(4444),
     mSocket(this),
     mState(Disconnected)
 {
@@ -238,7 +311,7 @@ void Qmpi::finish()
 void Qmpi::negotiateCapabilities()
 {
     changeState(State::Negotiating);
-    if(!sendCommand(NEGOTIATION_COMMAND))
+    if(!sendCommand(Json::NEGOTIATION_COMMAND))
         return;
     startTransactionTimer();
 }
@@ -247,9 +320,9 @@ bool Qmpi::sendCommand(QString command, QJsonObject args)
 {
     // Build JSON object
     QJsonObject commandObject;
-    commandObject[JsonKeys::EXECUTE] = command;
+    commandObject[Json::Execute::IDENTIFIER_KEY] = command;
     if(!args.isEmpty())
-        commandObject[JsonKeys::Execute::ARGUMENTS] = args;
+        commandObject[Json::Execute::ARGUMENTS] = args;
 
     // Convert to raw message
     QJsonDocument execution(commandObject);
@@ -264,7 +337,7 @@ bool Qmpi::sendCommand(QString command, QJsonObject args)
         // Check for error
         if(bytesWritten == -1)
         {
-            raiseCommunicationError(CommunicationError::ReadFailed);
+            raiseCommunicationError(CommunicationError::WriteFailed);
             return false;
         }
 
@@ -293,25 +366,21 @@ void Qmpi::propagate()
         startTransactionTimer();
     }
     else
+    {
+        emit commandQueueExhausted();
         changeState(State::Idle);
+    }
 }
 
-void Qmpi::processServerMessage(const QJsonObject& msg)
+void Qmpi::processServerMessage(const QJsonObject& jMsg)
 {
     // Stop transaction timer since message has arrived
     bool timerWasRunning = stopTransactionTimer();
 
     if(mState == State::AwaitingWelcome)
     {
-        // Get and parse the greeting
-        QJsonObject greeting;
-        if(Qx::Json::checkedKeyRetrieval(greeting, msg, JsonKeys::GREETING).isValid())
-        {
-            raiseCommunicationError(CommunicationError::UnexpectedResponse);
-            return;
-        }
-
-        if(!processGreetingMessage(greeting))
+        // Parse the greeting
+        if(!processGreetingMessage(jMsg))
             return;
 
         // Automatically proceed to enabling commands since this currently doesn't support extra capabilities
@@ -320,7 +389,7 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
     else if(mState == State::Negotiating)
     {
         // Just ensure an error didn't happen, value doesn't matter (should be empty)
-        if(!msg.contains(JsonKeys::RETURN))
+        if(!jMsg.contains(Json::SuccessResponse::IDENTIFIER_KEY))
         {
             raiseCommunicationError(CommunicationError::UnexpectedResponse);
             return;
@@ -334,9 +403,9 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
     {
         changeState(State::ReadingMessage);
 
-        if(msg.contains(JsonKeys::EVENT))
+        if(jMsg.contains(Json::AsyncEvent::IDENTIFIER_KEY))
         {
-            if(!processEventMessage(msg))
+            if(!processEventMessage(jMsg))
                 return;
 
             // Restart the transaction timer if it was running since events are just informative
@@ -354,25 +423,17 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
             }
 
             // Check for each response type
-            if(msg.contains(JsonKeys::RETURN))
+            if(jMsg.contains(Json::SuccessResponse::IDENTIFIER_KEY))
             {
-                if(!processReturnMessage(msg))
+                if(!processSuccessMessage(jMsg))
                     return;
 
                 // Send next command
                 propagate();
             }
-            else if(msg.contains(JsonKeys::ERROR))
+            else if(jMsg.contains(Json::ErrorResponse::IDENTIFIER_KEY))
             {
-                // Get and parse the error
-                QJsonObject error;
-                if(Qx::Json::checkedKeyRetrieval(error, msg, JsonKeys::ERROR).isValid())
-                {
-                    raiseCommunicationError(CommunicationError::UnexpectedResponse);
-                    return;
-                }
-
-                if(!processErrorMessage(error))
+                if(!processErrorMessage(jMsg))
                     return;
 
                 // Send next command
@@ -387,30 +448,27 @@ void Qmpi::processServerMessage(const QJsonObject& msg)
     }
 }
 
-bool Qmpi::processGreetingMessage(const QJsonObject& greeting)
+bool Qmpi::processGreetingMessage(const QJsonObject& jGreeting)
 {
-    QJsonObject version;
-    QJsonArray capabilities;
-    if(Qx::Json::checkedKeyRetrieval(version, greeting, JsonKeys::Greeting::VERSION).isValid())
-    {
-        raiseCommunicationError(CommunicationError::UnexpectedResponse);
-        return false;
-    }
-    if(Qx::Json::checkedKeyRetrieval(capabilities, greeting, JsonKeys::Greeting::CAPABILITIES).isValid())
+    Json::Greeting greeting;
+    if(Qx::parseJson(greeting, jGreeting).isValid())
     {
         raiseCommunicationError(CommunicationError::UnexpectedResponse);
         return false;
     }
 
-    emit connected(version, capabilities);
+    Json::GreetingBody gb = greeting.QMP;
+
+    emit connected(gb.version, gb.capabilities);
     return true;
 }
 
-bool Qmpi::processReturnMessage(const QJsonObject& ret)
+bool Qmpi::processSuccessMessage(const QJsonObject& jSuccess)
 {
     Q_ASSERT(!mExecutionQueue.empty());
 
-    QJsonValue value = ret[JsonKeys::RETURN];
+    // Get value
+    QJsonValue value = jSuccess[Json::SuccessResponse::IDENTIFIER_KEY];
     std::any context = mExecutionQueue.front().context;
     mExecutionQueue.pop();
     emit responseReceived(value, context);
@@ -418,65 +476,49 @@ bool Qmpi::processReturnMessage(const QJsonObject& ret)
     return true; // Can't fail as of yet
 }
 
-bool Qmpi::processErrorMessage(const QJsonObject& error)
+bool Qmpi::processErrorMessage(const QJsonObject& jError)
 {
     Q_ASSERT(!mExecutionQueue.empty());
 
     std::any context = mExecutionQueue.front().context;
     mExecutionQueue.pop();
 
-    QString errorClass;
-    QString description;
-    if(Qx::Json::checkedKeyRetrieval(errorClass, error, JsonKeys::Error::CLASS).isValid())
-    {
-        raiseCommunicationError(CommunicationError::UnexpectedResponse);
-        return false;
-    }
-    if(Qx::Json::checkedKeyRetrieval(description, error, JsonKeys::Error::DESCRIPTION).isValid())
+    Json::ErrorResponse er;
+    if(Qx::parseJson(er, jError).isValid())
     {
         raiseCommunicationError(CommunicationError::UnexpectedResponse);
         return false;
     }
 
-    emit errorResponseReceived(errorClass, description, context);
+    Json::ErrorBody eb = er.error;
+
+    emit errorResponseReceived(eb.eClass, eb.desc, context);
     return true;
 }
 
-bool Qmpi::processEventMessage(const QJsonObject& event)
+bool Qmpi::processEventMessage(const QJsonObject& jEvent)
 {
-    QString eventName;
-    QJsonObject data;
-    QJsonObject timestamp;
-    double seconds;
-    double microseconds;
-
-    // Get all the values (check for error after since there's a decent number)
-    Qx::SetOnce<bool> jsonError(false);
-
-    jsonError = Qx::Json::checkedKeyRetrieval(eventName, event, JsonKeys::EVENT).isValid();
-    jsonError = Qx::Json::checkedKeyRetrieval(data, event, JsonKeys::Event::DATA).isValid();
-    jsonError = Qx::Json::checkedKeyRetrieval(seconds, timestamp, JsonKeys::Event::Timestamp::SECONDS).isValid();
-    jsonError = Qx::Json::checkedKeyRetrieval(microseconds, timestamp, JsonKeys::Event::Timestamp::MICROSECONDS).isValid();
-
-    // Check if there was an error at any point
-    if(jsonError.value())
+    Json::AsyncEvent ae;
+    if(Qx::parseJson(ae, jEvent).isValid())
     {
         raiseCommunicationError(CommunicationError::UnexpectedResponse);
         return false;
     }
 
     // Convert native timestamp to QDateTime
+    Json::Timestamp ts = ae.timestamp;
+
     qint64 milliseconds = -1;
-    if(seconds != -1)
+    if(ts.seconds != -1)
     {
-        milliseconds = std::round(seconds) * 1000;
-        if(microseconds != -1)
-            milliseconds += std::round(microseconds / 1000);
+        milliseconds = std::round(ts.seconds) * 1000;
+        if(ts.microseconds != -1)
+            milliseconds += std::round(ts.microseconds / 1000);
     }
     QDateTime standardTimestamp = (milliseconds != -1) ? QDateTime::fromMSecsSinceEpoch(milliseconds) : QDateTime();
 
     // Notify
-    emit eventReceived(eventName, data, standardTimestamp);
+    emit eventReceived(ae.event, ae.data, standardTimestamp);
 
     // Return success
     return true;
@@ -892,4 +934,13 @@ void Qmpi::handleTransactionTimeout() { raiseCommunicationError(CommunicationErr
  *  This signal is emitted when the interface's state changes, with @a state containing the new state.
  *
  *  @sa connected(), disconnected(), readyForCommands() and finished().
+ */
+
+/*!
+ *  @fn void Qmpi::commandQueueExhausted()
+ *
+ *  This signal is emitted when the interface's command queue becomes empty and the response to the last command
+ *  in the queue has been received, just before it enters State::Idle.
+ *
+ *  @sa stateChanged(), and execute().
  */

@@ -33,53 +33,6 @@ private:
         std::any context;
     };
 
-//-Class Variables-----------------------------------------------------------------------------------------------------------
-private:
-    /*! @cond */
-    class JsonKeys
-    {
-    public:
-        static inline const QString GREETING = "QMP";
-        class Greeting
-        {
-        public:
-            static inline const QString VERSION = "version";
-            static inline const QString CAPABILITIES = "capabilities";
-        };
-
-        static inline const QString RETURN = "return";
-        static inline const QString ERROR = "error";
-        class Error
-        {
-        public:
-            static inline const QString CLASS = "class";
-            static inline const QString DESCRIPTION = "desc";
-        };
-
-        static inline const QString EVENT = "event";
-        class Event
-        {
-        public:
-            static inline const QString DATA = "data";
-            static inline const QString TIMESTAMP = "timestamp";
-            class Timestamp
-            {
-            public:
-                static inline const QString SECONDS = "seconds";
-                static inline const QString MICROSECONDS = "microseconds";
-            };
-        };
-
-        static inline const QString EXECUTE = "execute";
-        class Execute
-        {
-        public:
-            static inline const QString ARGUMENTS = "arguments";
-        };
-    };
-    /*! @endcond */
-    static inline const QString NEGOTIATION_COMMAND = "qmp_capabilities";
-
 //-Instance Variables--------------------------------------------------------------------------------------------------------
 private:
     // Network
@@ -122,11 +75,11 @@ private:
     void propagate();
 
     // Message Processing
-    void processServerMessage(const QJsonObject& msg);
-    bool processGreetingMessage(const QJsonObject& greeting);
-    bool processReturnMessage(const QJsonObject& ret);
-    bool processErrorMessage(const QJsonObject& error);
-    bool processEventMessage(const QJsonObject& event);
+    void processServerMessage(const QJsonObject& jMsg);
+    bool processGreetingMessage(const QJsonObject& jGreeting);
+    bool processSuccessMessage(const QJsonObject& jSuccess);
+    bool processErrorMessage(const QJsonObject& jError);
+    bool processEventMessage(const QJsonObject& jEvent);
 
 public:
     // Info
@@ -170,6 +123,7 @@ signals:
     void communicationErrorOccurred(Qmpi::CommunicationError error); // Will disconnect after
     void errorResponseReceived(QString errorClass, QString description, std::any context); // Will not disconnect after
     void stateChanged(Qmpi::State state);
+    void commandQueueExhausted();
 };
 
 #endif // QMPI_H
