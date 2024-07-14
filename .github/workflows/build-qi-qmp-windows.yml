@@ -58,7 +58,7 @@ jobs:
     - name: Install Graphviz
       run: choco install graphviz
     - name: Checkout QI-QMP
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         path: ${{ env.qi_qmp_src_suffix }}
         fetch-depth: 0 # Required for verbose versioning to work correctly
