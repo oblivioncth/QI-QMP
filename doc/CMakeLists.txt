@@ -1,11 +1,6 @@
 # Include standard documentation target creator
 include(OB/Documentation)
 
-# Set project specific doxygen overrides
-set(DOXYGEN_HTML_COLORSTYLE_HUE 22)
-set(DOXYGEN_HTML_COLORSTYLE_SAT 255)
-set(DOXYGEN_HTML_COLORSTYLE_GAMMA 80)
-
 # Setup documentation
 ob_standard_documentation(${DOC_TARGET_NAME}
     DOXY_VER 1.9.4
@@ -17,4 +12,7 @@ ob_standard_documentation(${DOC_TARGET_NAME}
     INPUT_LIST
         "${LIB_PATH}/src"
         "${LIB_PATH}/include"
+    THEME_COLORS
+        PRIMARY "#CC6428"
+        NIGHT_PRIMARY "#E06B2C"
 )
