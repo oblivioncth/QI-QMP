@@ -7,7 +7,7 @@ This project makes use of the CMake build system generator for both compilation 
 
 It is based on Qt 6.
 
-[![Dev Builds](https://github.com/oblivioncth/QI-QMP/actions/workflows/push-reaction.yml/badge.svg?branch=dev)](https://github.com/oblivioncth/QI-QMP/actions/workflows/push-reaction.yml)
+[![Dev Builds](https://github.com/oblivioncth/QI-QMP/actions/workflows/build-project.yml/badge.svg?branch=dev)](https://github.com/oblivioncth/QI-QMP/actions/workflows/build-project.yml)
 
 ## Documentation:
 Detailed documentation of this library, facilitated by Doxygen, is available at: https://oblivioncth.github.io/QI-QMP/
