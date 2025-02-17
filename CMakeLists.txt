@@ -6,14 +6,14 @@ cmake_minimum_required(VERSION 3.23.0...3.25.0)
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
 project(QI-QMP
-    VERSION 0.2.2
+    VERSION 0.2.3
     LANGUAGES CXX
     DESCRIPTION "Qt-based Interface for QEMU Machine Protocol"
 )
 
 # Get helper scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FetchOBCMake.cmake)
-fetch_ob_cmake("v0.3.5")
+fetch_ob_cmake("v0.3.9")
 
 # Initialize project according to standard rules
 include(OB/Project)
@@ -42,9 +42,8 @@ set(QI_QMP_QT_COMPONENTS
     Network
 )
 
-add_compile_definitions(QT_DISABLE_DEPRECATED_BEFORE=0x060000)
-include(OB/BetterFindQt6)
-ob_find_qt6_package(REQUIRED COMPONENTS ${QI_QMP_QT_COMPONENTS})
+include(OB/Qt)
+ob_find_package_qt(REQUIRED COMPONENTS ${QI_QMP_QT_COMPONENTS})
 
 # Fetch Qx (build and import from source)
 set(QI_QMP_QX_COMPONENTS
@@ -53,7 +52,7 @@ set(QI_QMP_QX_COMPONENTS
 
 include(OB/FetchQx)
 ob_fetch_qx(
-    REF "v0.5.1"
+    REF "v0.6.1"
     COMPONENTS
         ${QI_QMP_QX_COMPONENTS}
 )
