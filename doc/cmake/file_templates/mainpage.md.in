@@ -113,6 +113,7 @@ The `ninja` generator is recommended.
 ### CMake Options:
 
  - `QI_QMP_DOCS` - Set to `ON` in order to generate the documentation target (OFF)
+ - `QI_QMP_INSTALL_MISC` - Set to `ON` to enable installation of misc components (e.g. README.md/LICENSE) (ON)
  - `BUILD_SHARED_LIBS` - Build QI-QMP as a shared library instead of a static one (OFF)
 
 ### CMake Targets:
@@ -124,8 +125,9 @@ The `ninja` generator is recommended.
 
 ### CMake Install Components:
 
-- `qi_qmp` - Installs top-level files (README.md, CMake package configuration files, etc.)
+- `qi_qmp` - Installs top-level files (CMake package configuration files, etc.)
 - `qi_qmp_docs` - Installs documentation
+- `qi_qmp_misc` - Installs miscellaneous files (e.g. README.md/LICENSE)
 - `qi_qmp_qmpi` - Installs the built library
 
 If QI-QMP is configured as a sub-project, its install components are automatically removed from the default install component, as to not pollute the install directory of the top-level project. They can still be installed by directly referencing their component names as shown above.
