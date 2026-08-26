@@ -6,14 +6,14 @@ cmake_minimum_required(VERSION 3.23.0...3.25.0)
 # Project
 # NOTE: DON'T USE TRAILING ZEROS IN VERSIONS
 project(QI-QMP
-    VERSION 0.2.3.1
+    VERSION 0.2.4
     LANGUAGES CXX
     DESCRIPTION "Qt-based Interface for QEMU Machine Protocol"
 )
 
 # Get helper scripts
 include(${CMAKE_CURRENT_SOURCE_DIR}/cmake/FetchOBCMake.cmake)
-fetch_ob_cmake("v0.3.12")
+fetch_ob_cmake("v0.4.0.2")
 
 # Initialize project according to standard rules
 include(OB/Project)
@@ -25,6 +25,7 @@ set(PROJECT_NAMESPACE_UC "QI_QMP")
 
 # Configuration options
 option(QI_QMP_DOCS "Build QI-QMP documentation" OFF)
+option(QI_QMP_INSTALL_MISC "Enable installation of misc components (e.g README.md/LICENSE)" ON)
 option(BUILD_SHARED_LIBS "Build shared libraries." OFF) # Redundant due to OB, but explicit
 
 # C++
@@ -82,7 +83,9 @@ ob_standard_project_package_config(
 
 #=================+ Top Level Install ========================
 
-ob_standard_project_misc_install()
+if(QI_QMP_INSTALL_MISC)
+    ob_standard_project_misc_install()
+endif()
 
 #====================== Package ==============================
 
